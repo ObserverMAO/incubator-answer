@@ -27,7 +27,7 @@ import {
   Operate,
   UserCard,
   Icon,
-  // Comment,
+  Comment,
   FormatTime,
   htmlRender,
   ImgViewer,
@@ -198,12 +198,12 @@ const Index: FC<Props> = ({
           />
         </div>
       </div>
-      {/*
+
       <Comment
         objectId={data.id}
         mode="answer"
         commentId={searchParams.get('commentId')}
-      /> */}
+      />
     </div>
   );
 };
