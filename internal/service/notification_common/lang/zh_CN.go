@@ -43,8 +43,14 @@ func (z *ZhCN) getDescriptionTemplate(msgType plugin.NotificationType) string {
 		return zhCnTplUpdateAnswerDescription
 	case plugin.NotificationAcceptAnswer:
 		return zhCnTplAcceptAnswerDescription
+	case plugin.NotificationUpVotedTheAnswer:
+		return zhCnTplUpVotedTheAnswerDescription
+	case plugin.NotificationDownVotedTheAnswer:
+		return zhCnTplDownVotedTheAnswerDescription
 	case plugin.NotificationCommentQuestion:
 		return zhCnTplCommentQuestionDescription
+	case plugin.NotificationCommentAnswer:
+		return zhCnTplCommentAnswerDescription
 	case plugin.NotificationUpVotedTheComment:
 		return zhCnTplUpVotedTheCommentDescription
 	case plugin.NotificationReplyToYou:
@@ -59,12 +65,12 @@ func (z *ZhCN) getDescriptionTemplate(msgType plugin.NotificationType) string {
 		return zhCnTplYourAnswerWasDeletedDescription
 	case plugin.NotificationYourCommentWasDeleted:
 		return zhCnTplYourCommentWasDeletedDescription
-	case plugin.NotificationCommentAnswer:
-		return zhCnTplCommentAnswerDescription
 	case plugin.NotificationInvitedYouToAnswer:
 		return zhCnTplInvitedYouToAnswerDescription
-	case plugin.NotificationNewQuestion, plugin.NotificationNewQuestionFollowedTag:
+	case plugin.NotificationNewQuestion:
 		return zhCnTplNewQuestionDescription
+	case plugin.NotificationNewQuestionFollowedTag:
+		return zhCnTplNewQuestionFollowedTagDescription
 	default:
 		return ""
 	}
@@ -76,6 +82,8 @@ const (
 	zhCnTplUpVotedTheQuestionDescription     = "%s 赞了问题"
 	zhCnTplDownVotedTheQuestionDescription   = "%s 踩了问题"
 	zhCnTplUpdateAnswerDescription           = "%s 更新了回答"
+	zhCnTplUpVotedTheAnswerDescription       = "%s 赞了回答"
+	zhCnTplDownVotedTheAnswerDescription     = "%s 踩了回答"
 	zhCnTplAcceptAnswerDescription           = "%s 采纳了回答"
 	zhCnTplCommentQuestionDescription        = "%s 评论了问题"
 	zhCnTplCommentAnswerDescription          = "%s 评论了回答"
@@ -88,4 +96,5 @@ const (
 	zhCnTplYourAnswerWasDeletedDescription   = "你的回答已删除"
 	zhCnTplYourCommentWasDeletedDescription  = "你的评论已删除"
 	zhCnTplNewQuestionDescription            = "%s 提出了问题"
+	zhCnTplNewQuestionFollowedTagDescription = "%s 关注了问题"
 )

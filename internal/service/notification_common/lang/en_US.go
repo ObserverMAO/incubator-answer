@@ -84,8 +84,14 @@ func (e *EnUS) getDescriptionTemplate(msgType plugin.NotificationType) string {
 		return enUsTplUpdateAnswerDescription
 	case plugin.NotificationAcceptAnswer:
 		return enUsTplAcceptAnswerDescription
+	case plugin.NotificationUpVotedTheAnswer:
+		return enUsTplUpVotedTheAnswerDescription
+	case plugin.NotificationDownVotedTheAnswer:
+		return enUsTplDownVotedTheAnswerDescription
 	case plugin.NotificationCommentQuestion:
 		return enUsTplCommentQuestionDescription
+	case plugin.NotificationCommentAnswer:
+		return enUsTplCommentAnswerDescription
 	case plugin.NotificationUpVotedTheComment:
 		return enUsTplUpVotedTheCommentDescription
 	case plugin.NotificationReplyToYou:
@@ -95,17 +101,15 @@ func (e *EnUS) getDescriptionTemplate(msgType plugin.NotificationType) string {
 	case plugin.NotificationYourQuestionIsClosed:
 		return enUsTplYourQuestionIsClosedDescription
 	case plugin.NotificationYourQuestionWasDeleted:
-		return enUsTplYourQuestionWasDeletedDescription
-	case plugin.NotificationYourAnswerWasDeleted:
 		return enUsTplYourAnswerWasDeletedDescription
 	case plugin.NotificationYourCommentWasDeleted:
 		return enUsTplYourCommentWasDeletedDescription
-	case plugin.NotificationCommentAnswer:
-		return enUsTplCommentAnswerDescription
 	case plugin.NotificationInvitedYouToAnswer:
 		return enUsTplInvitedYouToAnswerDescription
-	case plugin.NotificationNewQuestion, plugin.NotificationNewQuestionFollowedTag:
+	case plugin.NotificationNewQuestion:
 		return enUsTplNewQuestionDescription
+	case plugin.NotificationNewQuestionFollowedTag:
+		return enUsTplNewQuestionFollowedTagDescription
 	default:
 		return ""
 	}
@@ -118,6 +122,8 @@ const (
 	enUsTplDownVotedTheQuestionDescription   = "%s downvoted the question"
 	enUsTplUpdateAnswerDescription           = "%s updated the answer"
 	enUsTplAcceptAnswerDescription           = "%s accepted the answer"
+	enUsTplUpVotedTheAnswerDescription       = "%s upvoted the answer"
+	enUsTplDownVotedTheAnswerDescription     = "%s downvoted the answer"
 	enUsTplCommentQuestionDescription        = "%s commented the question"
 	enUsTplCommentAnswerDescription          = "%s commented the answer"
 	enUsTplUpVotedTheCommentDescription      = "%s upvoted the comment"
@@ -129,4 +135,5 @@ const (
 	enUsTplYourAnswerWasDeletedDescription   = "Your answer was deleted"
 	enUsTplYourCommentWasDeletedDescription  = "Your comment was deleted"
 	enUsTplNewQuestionDescription            = "%s asked a question"
+	enUsTplNewQuestionFollowedTagDescription = "%s asked a question"
 )

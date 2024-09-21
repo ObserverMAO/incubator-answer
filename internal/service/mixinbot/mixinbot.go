@@ -51,17 +51,5 @@ func NewMixinBotService(config *MixinBotConfig) (*MixinBotService, error) {
 	mixinBot.User = user
 	mixinBot.Client = client
 
-	// err = mixinBot.Client.SendMessage(context.Background(), &mixin.MessageRequest{
-	// 	ConversationID: mixin.UniqueConversationID(config.ClientID, mixinBot.User.App.CreatorID),
-	// 	RecipientID:    mixinBot.User.App.CreatorID,
-	// 	MessageID:      mixin.RandomTraceID(),
-	// 	Category:       mixin.MessageCategoryPlainText,
-	// 	Data:           base64.StdEncoding.EncodeToString([]byte("您已连接机器人")),
-	// })
-	// if err != nil {
-	// 	log.Errorf("send message to mixin bot failed: %+v", err)
-	// 	return nil, err
-	// }
-
 	return mixinBot, nil
 }
