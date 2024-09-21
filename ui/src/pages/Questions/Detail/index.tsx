@@ -65,7 +65,7 @@ const Index = () => {
 
   const [urlSearch] = useSearchParams();
   const page = Number(urlSearch.get('page') || 0);
-  const order = urlSearch.get('order') || '';
+  const order = urlSearch.get('order') || 'created';
   const [question, setQuestion] = useState<QuestionDetailRes | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { isSkeletonShow } = useSkeletonControl(isLoading);
@@ -98,7 +98,8 @@ const Index = () => {
 
   const requestAnswers = async () => {
     const res = await getAnswers({
-      order: order === 'updated' || order === 'created' ? order : 'default',
+      order: 'created',
+      // order: order === 'updated' || order === 'created' ? order : 'default',
       question_id: qid,
       page: 1,
       page_size: 999,

@@ -74,11 +74,12 @@ const Questions: FC = () => {
           source="questions"
           data={listData}
           order={curOrder}
-          orderList={
-            loggedUser.username
-              ? QUESTION_ORDER_KEYS
-              : QUESTION_ORDER_KEYS.filter((key) => key !== 'recommend')
-          }
+          // TODO if loggedUser.username, show all orderList
+          // orderList={
+          //   loggedUser.username
+          //     ? QUESTION_ORDER_KEYS
+          //     : QUESTION_ORDER_KEYS.filter((key) => key !== 'active')
+          // }
           isLoading={listLoading}
         />
       </Col>
