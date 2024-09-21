@@ -274,11 +274,11 @@ const Index = () => {
           </>
         )}
 
-        {!isLoading && Math.ceil(answers.count / 15) > 1 && (
+        {!isLoading && Math.ceil(answers.count / 999) > 1 && (
           <div className="d-flex justify-content-center answer-item pt-4">
             <Pagination
               currentPage={Number(page || 1)}
-              pageSize={15}
+              pageSize={999}
               totalSize={answers?.count || 0}
             />
           </div>
