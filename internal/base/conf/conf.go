@@ -29,6 +29,7 @@ import (
 	"github.com/apache/incubator-answer/internal/base/translator"
 	"github.com/apache/incubator-answer/internal/cli"
 	"github.com/apache/incubator-answer/internal/router"
+	"github.com/apache/incubator-answer/internal/service/mixinbot"
 	"github.com/apache/incubator-answer/internal/service/service_config"
 	"github.com/apache/incubator-answer/pkg/writer"
 	"github.com/segmentfault/pacman/contrib/conf/viper"
@@ -37,13 +38,14 @@ import (
 
 // AllConfig all config
 type AllConfig struct {
-	Debug         bool                          `json:"debug" mapstructure:"debug" yaml:"debug"`
-	Server        *Server                       `json:"server" mapstructure:"server" yaml:"server"`
-	Data          *Data                         `json:"data" mapstructure:"data" yaml:"data"`
-	I18n          *translator.I18n              `json:"i18n" mapstructure:"i18n" yaml:"i18n"`
-	ServiceConfig *service_config.ServiceConfig `json:"service_config" mapstructure:"service_config" yaml:"service_config"`
-	Swaggerui     *router.SwaggerConfig         `json:"swaggerui" mapstructure:"swaggerui" yaml:"swaggerui"`
-	UI            *server.UI                    `json:"ui" mapstructure:"ui" yaml:"ui"`
+	Debug          bool                          `json:"debug" mapstructure:"debug" yaml:"debug"`
+	Server         *Server                       `json:"server" mapstructure:"server" yaml:"server"`
+	Data           *Data                         `json:"data" mapstructure:"data" yaml:"data"`
+	I18n           *translator.I18n              `json:"i18n" mapstructure:"i18n" yaml:"i18n"`
+	ServiceConfig  *service_config.ServiceConfig `json:"service_config" mapstructure:"service_config" yaml:"service_config"`
+	Swaggerui      *router.SwaggerConfig         `json:"swaggerui" mapstructure:"swaggerui" yaml:"swaggerui"`
+	UI             *server.UI                    `json:"ui" mapstructure:"ui" yaml:"ui"`
+	MixinBotConfig *mixinbot.MixinBotConfig      `json:"mixinbot_config" mapstructure:"mixinbot_config" yaml:"mixinbot_config"`
 }
 
 type envConfigOverrides struct {
@@ -79,6 +81,9 @@ type Data struct {
 func (c *AllConfig) SetDefault() {
 	if c.UI == nil {
 		c.UI = &server.UI{}
+	}
+	if c.MixinBotConfig == nil {
+		c.MixinBotConfig = &mixinbot.MixinBotConfig{}
 	}
 }
 

@@ -25,6 +25,8 @@ import (
 	"time"
 
 	"github.com/apache/incubator-answer/internal/base/translator"
+	"github.com/apache/incubator-answer/internal/service/mixinbot"
+	notificationcommonlang "github.com/apache/incubator-answer/internal/service/notification_common/lang"
 	"github.com/apache/incubator-answer/internal/service/siteinfo_common"
 	"github.com/apache/incubator-answer/internal/service/user_external_login"
 	"github.com/apache/incubator-answer/pkg/display"
@@ -67,6 +69,8 @@ type NotificationCommon struct {
 	notificationQueueService notice_queue.NotificationQueueService
 	userExternalLoginRepo    user_external_login.UserExternalLoginRepo
 	siteInfoService          siteinfo_common.SiteInfoCommonService
+	mixinbotService          *mixinbot.MixinBotService
+	langPicker               *notificationcommonlang.LangPicker
 }
 
 func NewNotificationCommon(
@@ -79,6 +83,7 @@ func NewNotificationCommon(
 	notificationQueueService notice_queue.NotificationQueueService,
 	userExternalLoginRepo user_external_login.UserExternalLoginRepo,
 	siteInfoService siteinfo_common.SiteInfoCommonService,
+	mixinbotService *mixinbot.MixinBotService,
 ) *NotificationCommon {
 	notification := &NotificationCommon{
 		data:                     data,
@@ -90,6 +95,8 @@ func NewNotificationCommon(
 		notificationQueueService: notificationQueueService,
 		userExternalLoginRepo:    userExternalLoginRepo,
 		siteInfoService:          siteInfoService,
+		mixinbotService:          mixinbotService,
+		langPicker:               notificationcommonlang.NewLangPicker(),
 	}
 	notificationQueueService.RegisterHandler(notification.AddNotification)
 	return notification
@@ -208,6 +215,7 @@ func (ns *NotificationCommon) AddNotification(ctx context.Context, msg *schema.N
 	go ns.SendNotificationToAllFollower(ctx, msg, questionID)
 
 	if msg.Type == schema.NotificationTypeInbox {
+		go ns.syncNotificationToMixin(ctx, objInfo, msg)
 		ns.syncNotificationToPlugin(ctx, objInfo, msg)
 	}
 	return nil
@@ -348,6 +356,115 @@ func (ns *NotificationCommon) SendNotificationToAllFollower(ctx context.Context,
 		t.NoNeedPushAllFollow = true
 		ns.notificationQueueService.Send(ctx, t)
 	}
+}
+
+func (ns *NotificationCommon) syncNotificationToMixin(ctx context.Context, objInfo *schema.SimpleObjectInfo,
+	msg *schema.NotificationMsg) {
+	if ns.mixinbotService == nil {
+		log.Debugf("mixinbot service is not initialized")
+		return
+	}
+
+	mixinNotificationMsg, err := ns.getMixinNotificationMsg(ctx, objInfo, msg)
+	if err != nil {
+		log.Errorf("get mixin notification msg failed: %v", err)
+		return
+	}
+
+	if mixinNotificationMsg == nil {
+		log.Debugf("mixin notification msg is nil")
+		return
+	}
+
+	if len(mixinNotificationMsg.ReceiverExternalID) == 0 {
+		log.Debugf("receiver external id is empty")
+		return
+	}
+
+	description := ns.langPicker.Pick(notificationcommonlang.GetLanguage(mixinNotificationMsg.ReceiverLang)).TranslateDescription(mixinNotificationMsg)
+	ns.sendMixinNotification(description, mixinNotificationMsg)
+}
+
+func (ns *NotificationCommon) getMixinNotificationMsg(ctx context.Context, objInfo *schema.SimpleObjectInfo,
+	msg *schema.NotificationMsg) (*plugin.NotificationMessage, error) {
+	siteInfo, err := ns.siteInfoService.GetSiteGeneral(ctx)
+	if err != nil {
+		log.Errorf("get site general info failed: %v", err)
+		return nil, err
+	}
+	seoInfo, err := ns.siteInfoService.GetSiteSeo(ctx)
+	if err != nil {
+		log.Errorf("get site seo info failed: %v", err)
+		return nil, err
+	}
+	interfaceInfo, err := ns.siteInfoService.GetSiteInterface(ctx)
+	if err != nil {
+		log.Errorf("get site interface info failed: %v", err)
+		return nil, err
+	}
+
+	objInfo.QuestionID = uid.DeShortID(objInfo.QuestionID)
+	objInfo.AnswerID = uid.DeShortID(objInfo.AnswerID)
+	pluginNotificationMsg := plugin.NotificationMessage{
+		Type:           plugin.NotificationType(msg.NotificationAction),
+		ReceiverUserID: msg.ReceiverUserID,
+		TriggerUserID:  msg.TriggerUserID,
+		QuestionTitle:  objInfo.Title,
+		Content:        objInfo.Content,
+	}
+
+	if len(objInfo.QuestionID) > 0 {
+		pluginNotificationMsg.QuestionUrl =
+			display.QuestionURL(seoInfo.Permalink, siteInfo.SiteUrl, objInfo.QuestionID, objInfo.Title)
+	}
+	if len(objInfo.AnswerID) > 0 {
+		pluginNotificationMsg.AnswerUrl =
+			display.AnswerURL(seoInfo.Permalink, siteInfo.SiteUrl, objInfo.QuestionID, objInfo.Title, objInfo.AnswerID)
+	}
+	if len(objInfo.CommentID) > 0 {
+		pluginNotificationMsg.CommentUrl =
+			display.CommentURL(seoInfo.Permalink, siteInfo.SiteUrl, objInfo.QuestionID, objInfo.Title, objInfo.AnswerID, objInfo.CommentID)
+	}
+
+	if len(msg.TriggerUserID) > 0 {
+		triggerUser, exist, err := ns.userCommon.GetUserBasicInfoByID(ctx, msg.TriggerUserID)
+		if err != nil {
+			log.Errorf("get trigger user basic info failed: %v", err)
+			return nil, err
+		}
+		if exist {
+			pluginNotificationMsg.TriggerUserID = triggerUser.ID
+			pluginNotificationMsg.TriggerUserDisplayName = triggerUser.DisplayName
+			pluginNotificationMsg.TriggerUserUrl = display.UserURL(siteInfo.SiteUrl, triggerUser.Username)
+		}
+
+	}
+
+	if len(pluginNotificationMsg.ReceiverUserID) > 0 {
+		receiverUserExternalLogin, exist, err := ns.userExternalLoginRepo.GetByUserID(ctx, "basic", msg.ReceiverUserID)
+		if err != nil {
+			log.Errorf("get user external login info failed: %v", err)
+			return nil, err
+		}
+
+		if !exist {
+			return nil, err
+		}
+		pluginNotificationMsg.ReceiverExternalID = receiverUserExternalLogin.ExternalID
+	}
+
+	if len(pluginNotificationMsg.ReceiverLang) == 0 && len(msg.ReceiverUserID) > 0 {
+		userInfo, _, _ := ns.userCommon.GetUserBasicInfoByID(ctx, msg.ReceiverUserID)
+		if userInfo != nil {
+			pluginNotificationMsg.ReceiverLang = userInfo.Language
+		}
+		// If receiver not set language, use site default language.
+		if len(pluginNotificationMsg.ReceiverLang) == 0 || pluginNotificationMsg.ReceiverLang == translator.DefaultLangOption {
+			pluginNotificationMsg.ReceiverLang = interfaceInfo.Language
+		}
+	}
+
+	return &pluginNotificationMsg, nil
 }
 
 func (ns *NotificationCommon) syncNotificationToPlugin(ctx context.Context, objInfo *schema.SimpleObjectInfo,
