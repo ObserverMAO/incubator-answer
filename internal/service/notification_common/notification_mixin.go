@@ -62,16 +62,27 @@ func (ns *NotificationCommon) sendMixinNotification(notificationMsgDescription s
 	}
 
 	cardBase64code := base64.StdEncoding.EncodeToString(cardBytes)
-	err = ns.mixinbotService.Client.SendMessage(context.Background(), &mixin.MessageRequest{
+	messageRequest := &mixin.MessageRequest{
 		ConversationID: mixin.UniqueConversationID(ns.mixinbotService.Config.ClientID, msg.ReceiverExternalID),
 		RecipientID:    msg.ReceiverExternalID,
 		MessageID:      mixin.RandomTraceID(),
 		Category:       mixin.MessageCategoryAppCard,
 		Data:           cardBase64code,
-	})
+	}
+
+	err = ns.mixinbotService.Client.SendMessage(context.Background(), messageRequest)
 	if err != nil {
-		log.Errorf("send mixin notification failed: %v", err)
-		return err
+		// try create conversation
+		_, err = ns.mixinbotService.Client.CreateContactConversation(context.Background(), msg.ReceiverExternalID)
+		if err != nil {
+			log.Errorf("create contact conversation failed: %v, data: %v", err, card)
+			return err
+		}
+		err = ns.mixinbotService.Client.SendMessage(context.Background(), messageRequest)
+		if err != nil {
+			log.Errorf("send mixin notification failed: %v, data: %v", err, card)
+			return err
+		}
 	}
 	return nil
 }
