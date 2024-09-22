@@ -295,13 +295,10 @@ export interface LangsType {
 /**
  * @description interface for Question
  */
-export type QuestionOrderBy =
-  | 'recommend'
-  | 'newest'
-  | 'active'
-  | 'hot'
-  | 'score'
-  | 'unanswered';
+export type QuestionOrderBy = 'recommend' | 'active' | 'hot';
+// | 'newest'
+// | 'score'
+// | 'unanswered';
 
 export interface QueryQuestionsReq extends Paging {
   order: QuestionOrderBy;

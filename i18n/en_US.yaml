@@ -87,9 +87,9 @@ backend:
       description:
         other: Custom Level
     rank_question_add_label:
-      other: Ask question
+      other: Post topic
     rank_answer_add_label:
-      other: Write answer
+      other: Post reply
     rank_comment_add_label:
       other: Write comment
     rank_report_add_label:
@@ -99,31 +99,31 @@ backend:
     rank_link_url_limit_label:
       other: Post more than 2 links at a time
     rank_question_vote_up_label:
-      other: Upvote question
+      other: Upvote topic
     rank_answer_vote_up_label:
-      other: Upvote answer
+      other: Upvote reply
     rank_question_vote_down_label:
-      other: Downvote question
+      other: Downvote topic
     rank_answer_vote_down_label:
-      other: Downvote answer
+      other: Downvote reply
     rank_invite_someone_to_answer_label:
-      other: Invite someone to answer
+      other: Invite someone to reply
     rank_tag_add_label:
       other: Create new tag
     rank_tag_edit_label:
       other: Edit tag description (need to review)
     rank_question_edit_label:
-      other: Edit other's question (need to review)
+      other: Edit other's topic (need to review)
     rank_answer_edit_label:
-      other: Edit other's answer (need to review)
+      other: Edit other's reply (need to review)
     rank_question_edit_without_review_label:
-      other: Edit other's question without review
+      other: Edit other's topic without review
     rank_answer_edit_without_review_label:
-      other: Edit other's answer without review
+      other: Edit other's reply without review
     rank_question_audit_label:
-      other: Review question edits
+      other: Review topic edits
     rank_answer_audit_label:
-      other: Review answer edits
+      other: Review reply edits
     rank_tag_audit_label:
       other: Review tag edits
     rank_tag_edit_without_review_label:
@@ -162,13 +162,13 @@ backend:
         other: Email and password do not match.
     answer:
       not_found:
-        other: Answer do not found.
+        other: Reply do not found.
       cannot_deleted:
         other: No permission to delete.
       cannot_update:
         other: No permission to update.
       question_closed_cannot_add:
-        other: Questions are closed and cannot be added.
+        other: Topics are closed and cannot be added.
     comment:
       edit_without_permission:
         other: Comment are not allowed to edit.
@@ -218,7 +218,7 @@ backend:
       under_review:
         other: Your post is awaiting review. It will be visible after it has been approved.
       not_found:
-        other: Question not found.
+        other: Topic not found.
       cannot_deleted:
         other: No permission to delete.
       cannot_close:
@@ -334,16 +334,15 @@ backend:
       name:
         other: a duplicate
       desc:
-        other: This question has been asked before and already has an answer.
+        other: This topic has been asked before and already has an reply.
       placeholder:
-        other: Enter the existing question link
+        other: Enter the existing topic link
     not_a_answer:
       name:
-        other: not an answer
+        other: not an reply
       desc:
-        other:
-          This was posted as an answer, but it does not attempt to answer the
-          question. It should possibly be an edit, a comment, another question,
+        other: This was posted as an reply, but it does not attempt to reply the
+          topic. It should possibly be an edit, a comment, another topic,
           or deleted altogether.
     no_longer_needed:
       name:
@@ -361,12 +360,12 @@ backend:
       name:
         other: a community-specific reason
       desc:
-        other: This question doesn't meet a community guideline.
+        other: This topic doesn't meet a community guideline.
     not_clarity:
       name:
         other: needs details or clarity
       desc:
-        other: This question currently includes multiple questions in one. It should focus on one problem only.
+        other: This topic currently includes multiple topics in one. It should focus on one problem only.
     looks_ok:
       name:
         other: looks OK
@@ -381,7 +380,7 @@ backend:
       name:
         other: needs close
       desc:
-        other: A closed question can't answer, but still can edit, vote and comment.
+        other: A closed topic can't reply, but still can edit, vote and comment.
     needs_delete:
       name:
         other: needs delete
@@ -393,18 +392,17 @@ backend:
         name:
           other: spam
         desc:
-          other: This question has been asked before and already has an answer.
+          other: This topic has been asked before and already has an reply.
       guideline:
         name:
           other: a community-specific reason
         desc:
-          other: This question doesn't meet a community guideline.
+          other: This topic doesn't meet a community guideline.
       multiple:
         name:
           other: needs details or clarity
         desc:
-          other:
-            This question currently includes multiple questions in one. It should
+          other: This topic currently includes multiple topics in one. It should
             focus on one problem only.
       other:
         name:
@@ -415,13 +413,13 @@ backend:
       asked:
         other: asked
       answered:
-        other: answered
+        other: replied
       modified:
         other: modified
     deleted_title:
-      other: Deleted question
+      other: Deleted topic
     questions_title:
-      other: Questions
+      other: Topics
   tag:
     tags_title:
       other: Tags
@@ -430,41 +428,41 @@ backend:
   notification:
     action:
       update_question:
-        other: updated question
+        other: updated topic
       answer_the_question:
-        other: answered question
+        other: replied topic
       update_answer:
-        other: updated answer
+        other: updated reply
       accept_answer:
-        other: accepted answer
+        other: accepted reply
       comment_question:
-        other: commented question
+        other: commented topic
       comment_answer:
-        other: commented answer
+        other: commented reply
       reply_to_you:
         other: replied to you
       mention_you:
         other: mentioned you
       your_question_is_closed:
-        other: Your question has been closed
+        other: Your topic has been closed
       your_question_was_deleted:
-        other: Your question has been deleted
+        other: Your topic has been deleted
       your_answer_was_deleted:
-        other: Your answer has been deleted
+        other: Your reply has been deleted
       your_comment_was_deleted:
         other: Your comment has been deleted
       up_voted_question:
-        other: upvoted question
+        other: upvoted topic
       down_voted_question:
-        other: downvoted question
+        other: downvoted topic
       up_voted_answer:
-        other: upvoted answer
+        other: upvoted reply
       down_voted_answer:
-        other: downvoted answer
+        other: downvoted reply
       up_voted_comment:
         other: upvoted comment
       invited_you_to_answer:
-        other: invited you to answer
+        other: invited you to reply
       earned_badge:
         other: You've earned the "{{.BadgeName}}" badge
   email_tpl:
@@ -475,14 +473,14 @@ backend:
         other: "Confirm your new email address for {{.SiteName}} by clicking on the following link:<br>\n<a href='{{.ChangeEmailUrl}}' target='_blank'>{{.ChangeEmailUrl}}</a><br><br>\n\nIf you did not request this change, please ignore this email.\n"
     new_answer:
       title:
-        other: "[{{.SiteName}}] {{.DisplayName}} answered your question"
+        other: "[{{.SiteName}}] {{.DisplayName}} replied your topic"
       body:
         other: "<a href='{{.AnswerUrl}}'>{{.QuestionTitle}}</a><br><br>\n\n{{.DisplayName}}:<br>\n<blockquote>{{.AnswerSummary}}</blockquote><br>\n<a href='{{.AnswerUrl}}'>View it on {{.SiteName}}</a><br><br>\n\n--<br>\n<small><a href='{{.UnsubscribeUrl}}'>Unsubscribe</a></small>"
     invited_you_to_answer:
       title:
-        other: "[{{.SiteName}}] {{.DisplayName}} invited you to answer"
+        other: "[{{.SiteName}}] {{.DisplayName}} invited you to reply"
       body:
-        other: "<a href='{{.InviteUrl}}'>{{.QuestionTitle}}</a><br><br>\n\n{{.DisplayName}}:<br>\n<blockquote>I think you may know the answer.</blockquote><br>\n<a href='{{.InviteUrl}}'>View it on {{.SiteName}}</a><br><br>\n\n--<br>\n<small><a href='{{.UnsubscribeUrl}}'>Unsubscribe</a></small>"
+        other: "<a href='{{.InviteUrl}}'>{{.QuestionTitle}}</a><br><br>\n\n{{.DisplayName}}:<br>\n<blockquote>I think you may know the reply.</blockquote><br>\n<a href='{{.InviteUrl}}'>View it on {{.SiteName}}</a><br><br>\n\n--<br>\n<small><a href='{{.UnsubscribeUrl}}'>Unsubscribe</a></small>"
     new_comment:
       title:
         other: "[{{.SiteName}}] {{.DisplayName}} commented on your post"
@@ -490,7 +488,7 @@ backend:
         other: "<a href='{{.CommentUrl}}'>{{.QuestionTitle}}</a><br><br>\n\n{{.DisplayName}}:<br>\n<blockquote>{{.CommentSummary}}</blockquote><br>\n<a href='{{.CommentUrl}}'>View it on {{.SiteName}}</a><br><br>\n\n--<br>\n<small><a href='{{.UnsubscribeUrl}}'>Unsubscribe</a></small>"
     new_question:
       title:
-        other: "[{{.SiteName}}] New question: {{.QuestionTitle}}"
+        other: "[{{.SiteName}}] New topic: {{.QuestionTitle}}"
       body:
         other: "<a href='{{.QuestionUrl}}'>{{.QuestionTitle}}</a><br>\n<small>{{.Tags}}</small><br><br>\n\n--<br>\n<small><a href='{{.UnsubscribeUrl}}'>Unsubscribe</a></small>"
     pass_reset:
@@ -579,7 +577,7 @@ backend:
         name:
           other: Scholar
         desc:
-          other: Asked a question and accepted an answer.
+          other: Asked a topic and accepted an reply.
       commentator:
         name:
           other: Commentator
@@ -599,7 +597,7 @@ backend:
         name:
           other: Reader
         desc:
-          other: Read every answers in a topic with more than 10 answers.
+          other: Read every replies in a topic with more than 10 replies.
       welcome:
         name:
           other: Welcome
@@ -704,67 +702,67 @@ backend:
         name:
           other: Solved
         desc:
-          other: Have an answer be accepted.
+          other: Have an reply be accepted.
       guidance_counsellor:
         name:
           other: Guidance Counsellor
         desc:
-          other: Have 10 answers be accepted.
+          other: Have 10 replies be accepted.
       know_it_all:
         name:
           other: Know-it-All
         desc:
-          other: Have 50 answers be accepted.
+          other: Have 50 replies be accepted.
       solution_institution:
         name:
           other: Solution Institution
         desc:
-          other: Have 150 answers be accepted.
+          other: Have 150 replies be accepted.
       nice_answer:
         name:
-          other: Nice Answer
+          other: Nice Reply
         desc:
-          other: Answer score of 10 or more.
+          other: Reply score of 10 or more.
       good_answer:
         name:
-          other: Good Answer
+          other: Good Reply
         desc:
-          other: Answer score of 25 or more.
+          other: Reply score of 25 or more.
       great_answer:
         name:
-          other: Great Answer
+          other: Great Reply
         desc:
-          other: Answer score of 50 or more.
+          other: Reply score of 50 or more.
       nice_question:
         name:
-          other: Nice Question
+          other: Nice Topic
         desc:
-          other: Question score of 10 or more.
+          other: Topic score of 10 or more.
       good_question:
         name:
-          other: Good Question
+          other: Good Topic
         desc:
-          other: Question score of 25 or more.
+          other: Topic score of 25 or more.
       great_question:
         name:
-          other: Great Question
+          other: Great Topic
         desc:
-          other: Question score of 50 or more.
+          other: Topic score of 50 or more.
       popular_question:
         name:
-          other: Popular Question
+          other: Popular Topic
         desc:
-          other: Question with 500 views.
+          other: Topic with 500 views.
       notable_question:
         name:
-          other: Notable Question
+          other: Notable Topic
         desc:
-          other: Question with 1,000 views.
+          other: Topic with 1,000 views.
       famous_question:
         name:
-          other: Famous Question
+          other: Famous Topic
         desc:
-          other: Question with 5,000 views.
+          other: Topic with 5,000 views.
       popular_link:
         name:
           other: Popular Link
@@ -809,16 +807,16 @@ ui:
     prev: Prev
     next: Next
   page_title:
-    question: Question
-    questions: Questions
+    question: Topic
+    questions: Topics
     tag: Tag
     tags: Tags
     tag_wiki: tag wiki
     create_tag: Create Tag
     edit_tag: Edit Tag
-    ask_a_question: Add Question
-    edit_question: Edit Question
-    edit_answer: Edit Answer
+    ask_a_question: Create Topic
+    edit_question: Edit Topic
+    edit_answer: Edit Reply
     search: Search
     posts_containing: Posts containing
     settings: Settings
@@ -853,8 +851,8 @@ ui:
       posts: Posts
       invites: Invites
       votes: Votes
-    answer: Answer
-    question: Question
+    answer: Reply
+    question: Topic
     badge_award: Badge
   suspended:
     title: Your Account has been Suspended
@@ -974,8 +972,8 @@ ui:
   report_modal:
     flag_title: I am flagging to report this post as...
     close_title: I am closing this post as...
-    review_question_title: Review question
-    review_answer_title: Review answer
+    review_question_title: Review topic
+    review_answer_title: Review reply
     review_comment_title: Review comment
     btn_cancel: Cancel
     btn_submit: Submit
@@ -1072,22 +1070,22 @@ ui:
     btn_cancel: Cancel
     show_more: "{{count}} more comments"
     tip_question: >-
-      Use comments to ask for more information or suggest improvements. Avoid
-      answering questions in comments.
+      Use comments to ask for more information or to suggest improvements. Avoid
+      replying to topics in comments.
     tip_answer: >-
       Use comments to reply to other users or notify them of changes. If you are
       adding new information, edit your post instead of commenting.
     tip_vote: It adds something useful to the post
   edit_answer:
-    title: Edit Answer
-    default_reason: Edit answer
-    default_first_reason: Add answer
+    title: Edit Reply
+    default_reason: Edit reply
+    default_first_reason: Add reply
     form:
       fields:
         revision:
           label: Revision
         answer:
-          label: Answer
+          label: Reply
           feedback:
             characters: content must be at least 6 characters in length.
         edit_summary:
@@ -1105,23 +1103,23 @@ ui:
       newest: Newest
     button_follow: Follow
     button_following: Following
-    tag_label: questions
+    tag_label: topics
     search_placeholder: Filter by tag name
     no_desc: The tag has no description.
     more: More
   ask:
-    title: Add Question
-    edit_title: Edit Question
-    default_reason: Edit question
-    default_first_reason: Add question
-    similar_questions: Similar questions
+    title: Create Topic
+    edit_title: Edit Topic
+    default_reason: Edit topic
+    default_first_reason: Create Topic
+    similar_questions: Similar topics
     form:
       fields:
         revision:
           label: Revision
         title:
           label: Title
-          placeholder: Be specific and imagine you're asking a question to another person
+          placeholder: Be specific and imagine you're asking a topic to another person
           msg:
             empty: Title cannot be empty.
             range: Title up to 150 characters
@@ -1134,28 +1132,28 @@ ui:
           msg:
             empty: Tags cannot be empty.
         answer:
-          label: Answer
+          label: Reply
           msg:
-            empty: Answer cannot be empty.
+            empty: Reply cannot be empty.
         edit_summary:
           label: Edit summary
           placeholder: >-
             Briefly explain your changes (corrected spelling, fixed grammar,
             improved formatting)
-    btn_post_question: Post your question
+    btn_post_question: Post your topic
     btn_save_edits: Save edits
-    answer_question: Answer your own question
-    post_question&answer: Post your question and answer
+    answer_question: Reply to your own topic
+    post_question&answer: Post your topic and reply
   tag_selector:
     add_btn: Add tag
     create_btn: Create new tag
     search_tag: Search tag
-    hint: "Describe what your question is about, at least one tag is required."
+    hint: "Describe what your topic is about, at least one tag is required."
     no_result: No tags matched
     tag_required_text: Required tag (at least one)
   header:
     nav:
-      question: Questions
+      question: Topics
       tag: Tags
       user: Users
       badges: Badges
@@ -1311,13 +1309,13 @@ ui:
       turn_on: Turn on
       inbox:
         label: Inbox notifications
-        description: Answers to your questions, comments, invites, and more.
+        description: Replies to your topics, comments, invites, and more.
       all_new_question:
-        label: All new questions
-        description: Get notified of all new questions. Up to 50 questions per week.
+        label: All new topics
+        description: Get notified of all new topics. Up to 50 topics per week.
       all_new_question_for_following_tags:
-        label: All new questions for following tags
-        description: Get notified of new questions for following tags.
+        label: All new topics for following tags
+        description: Get notified of new topics for following tags.
     account:
       heading: Account
       change_email_btn: Change email
@@ -1364,12 +1362,12 @@ ui:
     review: Your revision will show after review.
     sent_success: Sent successfully
   related_question:
-    title: Related Questions
-    answers: answers
+    title: Related Topics
+    answers: replies
   invite_to_answer:
     title: Invite People
-    desc: Invite people you think can answer.
-    invite: Invite to answer
+    desc: Invite people you think can reply.
+    invite: Invite to reply
     add: Add people
     search: Search people
   question_detail:
@@ -1382,41 +1380,41 @@ ui:
     Views: Viewed
     Follow: Follow
     Following: Following
-    follow_tip: Follow this question to receive notifications
-    answered: answered
+    follow_tip: Follow this topic to receive notifications
+    answered: replied
     closed_in: Closed in
-    show_exist: Show existing question.
+    show_exist: Show existing topic.
     useful: Useful
     question_useful: It is useful and clear
     question_un_useful: It is unclear or not useful
-    question_bookmark: Bookmark this question
+    question_bookmark: Bookmark this topic
     answer_useful: It is useful
     answer_un_useful: It is not useful
     answers:
-      title: Answers
+      title: Replies
       score: Score
       newest: Newest
       oldest: Oldest
       btn_accept: Accept
       btn_accepted: Accepted
     write_answer:
-      title: Your Answer
-      edit_answer: Edit my existing answer
-      btn_name: Post your answer
-      add_another_answer: Add another answer
-      confirm_title: Continue to answer
+      title: Your Reply
+      edit_answer: Edit my existing reply
+      btn_name: Post your reply
+      add_another_answer: Add another reply
+      confirm_title: Continue to reply
       continue: Continue
       confirm_info: >-
-        <p>Are you sure you want to add another answer?</p><p>You could use the
-        edit link to refine and improve your existing answer, instead.</p>
-      empty: Answer cannot be empty.
+        <p>Are you sure you want to add another reply?</p><p>You could use the
+        edit link to refine and improve your existing reply, instead.</p>
+      empty: Reply cannot be empty.
       characters: content must be at least 6 characters in length.
       tips:
-        header_1: Thanks for your answer
-        li1_1: Please be sure to <strong>answer the question</strong>. Provide details and share your research.
+        header_1: Thanks for your reply
+        li1_1: Please be sure to <strong>reply to the topic</strong>. Provide details and share your research.
         li1_2: Back up any statements you make with references or personal experience.
         header_2: But <strong>avoid</strong> ...
-        li2_1: Asking for help, seeking clarification, or responding to other answers.
+        li2_1: Asking for help, seeking clarification, or responding to other replies.
     reopen:
       confirm_btn: Reopen
       title: Reopen this post
@@ -1436,17 +1434,17 @@ ui:
   delete:
     title: Delete this post
     question: >-
-      We do not recommend <strong>deleting questions with answers</strong> because
+      We do not recommend <strong>deleting topics with replies</strong> because
       doing so deprives future readers of this knowledge.</p><p>Repeated deletion
-      of answered questions can result in your account being blocked from asking.
+      of replied topics can result in your account being blocked from replying.
       Are you sure you wish to delete?
     answer_accepted: >-
-      <p>We do not recommend <strong>deleting accepted answer</strong> because
+      <p>We do not recommend <strong>deleting accepted reply</strong> because
       doing so deprives future readers of this knowledge. </p> Repeated deletion
-      of accepted answers can result in your account being blocked from answering.
+      of accepted replies can result in your account being blocked from replying.
       Are you sure you wish to delete?
     other: Are you sure you wish to delete?
-    tip_answer_deleted: This answer has been deleted
+    tip_answer_deleted: This reply has been deleted
     undelete_title: Undelete this post
     undelete_desc: Are you sure you wish to undelete?
   btns:
@@ -1463,15 +1461,15 @@ ui:
     signup: Sign up
     logout: Log out
     verify: Verify
-    add_question: Add question
+    add_question: Create Topic
     approve: Approve
     reject: Reject
     skip: Skip
     discard_draft: Discard draft
     pinned: Pinned
     all: All
-    question: Question
-    answer: Answer
+    question: Topic
+    answer: Reply
     comment: Comment
     refresh: Refresh
     resend: Resend
@@ -1515,10 +1513,10 @@ ui:
       title: Advanced Search Tips
       tag: "<1>[tag]</1> search with a tag"
       user: "<1>user:username</1> search by author"
-      answer: "<1>answers:0</1> unanswered questions"
+      answer: "<1>replies:0</1> unreplied topic"
       score: "<1>score:3</1> posts with a 3+ score"
-      question: "<1>is:question</1> search questions"
-      is_answer: "<1>is:answer</1> search answers"
+      question: "<1>is:topic</1> search topic"
+      is_answer: "<1>is:reply</1> search replies"
     empty: We couldn't find anything. <br /> Try different or less specific keywords.
   share:
     name: Share
@@ -1548,31 +1546,31 @@ ui:
     following_tags: Following Tags
     edit: Edit
     save: Save
-    follow_tag_tip: Follow tags to curate your list of questions.
-    hot_questions: Hot Questions
-    all_questions: All Questions
-    x_questions: "{{ count }} Questions"
-    x_answers: "{{ count }} answers"
-    questions: Questions
-    answers: Answers
+    follow_tag_tip: Follow tags to curate your list of topics.
+    hot_questions: Hot Topics
+    all_questions: All Topics
+    x_questions: "{{ count }} Topics"
+    x_answers: "{{ count }} replies"
+    questions: Topics
+    answers: Replies
     newest: Newest
     active: Active
     hot: Hot
     recommend: Recommend
     score: Score
-    unanswered: Unanswered
+    unanswered: Unreplied
     modified: modified
-    answered: answered
+    answered: replied
     asked: asked
     closed: closed
     follow_a_tag: Follow a tag
     more: More
   personal:
     overview: Overview
-    answers: Answers
-    answer: answer
-    questions: Questions
-    question: question
+    answers: Replies
+    answer: reply
+    questions: Topics
+    question: topic
     bookmarks: Bookmarks
     reputation: Reputation
     comments: Comments
@@ -1588,20 +1586,20 @@ ui:
     last_login: Seen
     about_me: About Me
     about_me_empty: "// Hello, World !"
-    top_answers: Top Answers
-    top_questions: Top Questions
+    top_answers: Top Replies
+    top_questions: Top Topics
     stats: Stats
     list_empty: No posts found.<br />Perhaps you'd like to select a different tab?
     accepted: Accepted
-    answered: answered
+    answered: replied
     asked: asked
     downvoted: downvoted
     mod_short: MOD
     mod_long: Moderators
     x_reputation: reputation
     x_votes: votes received
-    x_answers: answers
-    x_questions: questions
+    x_answers: replies
+    x_questions: topics
     recent_badges: Recent Badges
   install:
     title: Installation
@@ -1701,7 +1699,7 @@ ui:
   counts:
     views: views
     votes: votes
-    answers: answers
+    answers: replies
     accepted: Accepted
   page_error:
     http_error: HTTP Error {{ code }}
@@ -1714,8 +1712,8 @@ ui:
   nav_menus:
     dashboard: Dashboard
     contents: Contents
-    questions: Questions
-    answers: Answers
+    questions: Topics
+    answers: Replies
     users: Users
     badges: Badges
     flags: Flags
@@ -1761,8 +1759,8 @@ ui:
       title: Dashboard
       welcome: Welcome to Admin!
       site_statistics: Site statistics
-      questions: "Questions:"
-      answers: "Answers:"
+      questions: "Topics:"
+      answers: "Replies:"
       comments: "Comments:"
       votes: "Votes:"
       users: "Users:"
@@ -1901,17 +1899,17 @@ ui:
         title: Delete this user
         content: Are you sure you want to delete this user? This is permanent!
         remove: Remove their content
-        label: Remove all questions, answers, comments, etc.
+        label: Remove all topics, replies, comments, etc.
         text: Don’t check this if you wish to only delete the user’s account.
       suspend_user:
         title: Suspend this user
         content: A suspended user can't log in.
     questions:
-      page_title: Questions
+      page_title: Topics
       unlisted: Unlisted
       post: Post
       votes: Votes
-      answers: Answers
+      answers: Replies
       created: Created
       status: Status
       action: Action
@@ -1920,7 +1918,7 @@ ui:
       filter:
         placeholder: "Filter by title, question:id"
     answers:
-      page_title: Answers
+      page_title: Replies
       post: Post
       votes: Votes
       created: Created
@@ -1928,7 +1926,7 @@ ui:
       action: Action
       change: Change
       filter:
-        placeholder: "Filter by title, answer:id"
+        placeholder: "Filter by title, reply:id"
     general:
       page_title: General
       name:
@@ -2034,9 +2032,9 @@ ui:
     write:
       page_title: Write
       restrict_answer:
-        title: Answer write
-        label: Each user can only write one answer for the same question
-        text: "Turn off to allow users to write multiple answers to the same question, which may cause answers to be unfocused."
+        title: Reply write
+        label: Each user can only write one reply for the same topic
+        text: "Turn off to allow users to write multiple replies to the same topic, which may cause replies to be unfocused."
       recommend_tags:
         label: Recommend tags
         text: "Recommend tags will show in the dropdown list by default."
@@ -2045,7 +2043,7 @@ ui:
       required_tag:
         title: Set required tags
         label: Set “Recommend tags” as required tags
-        text: "Every new question must have at least one recommend tag."
+        text: "Every new topic must have at least one recommend tag."
       reserved_tags:
         label: Reserved tags
         text: "Reserved tags can only be used by moderator."
@@ -2181,12 +2179,12 @@ ui:
   page_review:
     review: Review
     proposed: proposed
-    question_edit: Question edit
-    answer_edit: Answer edit
+    question_edit: Topic edit
+    answer_edit: Reply edit
     tag_edit: Tag edit
     edit_summary: Edit summary
-    edit_question: Edit question
-    edit_answer: Edit answer
+    edit_question: Edit topic
+    edit_answer: Edit reply
     edit_tag: Edit tag
     empty: No review tasks left.
     approve_revision_tip: Do you approve this revision?
@@ -2215,7 +2213,7 @@ ui:
     commented: commented
     rollback: rollback
     edited: edited
-    answered: answered
+    answered: replied
     asked: asked
     closed: closed
     reopened: reopened
@@ -2229,7 +2227,7 @@ ui:
     show_votes: "Show votes"
     n_or_a: N/A
     title_for_question: "Timeline for"
-    title_for_answer: "Timeline for answer to {{ title }} by {{ author }}"
+    title_for_answer: "Timeline for reply to {{ title }} by {{ author }}"
     title_for_tag: "Timeline for tag"
     datetime: Datetime
     type: Type

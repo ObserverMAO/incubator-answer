@@ -38,12 +38,12 @@ import * as Type from '@/common/interface';
 import { useSkeletonControl } from '@/hooks';
 
 export const QUESTION_ORDER_KEYS: Type.QuestionOrderBy[] = [
-  'newest',
   'active',
   'hot',
-  'score',
-  'unanswered',
-  'recommend',
+  // 'newest',
+  // 'score',
+  // 'unanswered',
+  // 'recommend',
 ];
 interface Props {
   source: 'questions' | 'tag';

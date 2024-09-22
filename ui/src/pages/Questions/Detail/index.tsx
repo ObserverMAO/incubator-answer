@@ -65,7 +65,7 @@ const Index = () => {
 
   const [urlSearch] = useSearchParams();
   const page = Number(urlSearch.get('page') || 0);
-  const order = urlSearch.get('order') || '';
+  const order = urlSearch.get('order') || 'created';
   const [question, setQuestion] = useState<QuestionDetailRes | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { isSkeletonShow } = useSkeletonControl(isLoading);
@@ -98,7 +98,8 @@ const Index = () => {
 
   const requestAnswers = async () => {
     const res = await getAnswers({
-      order: order === 'updated' || order === 'created' ? order : 'default',
+      order: 'created',
+      // order: order === 'updated' || order === 'created' ? order : 'default',
       question_id: qid,
       page: 1,
       page_size: 999,
@@ -273,11 +274,11 @@ const Index = () => {
           </>
         )}
 
-        {!isLoading && Math.ceil(answers.count / 15) > 1 && (
+        {!isLoading && Math.ceil(answers.count / 999) > 1 && (
           <div className="d-flex justify-content-center answer-item pt-4">
             <Pagination
               currentPage={Number(page || 1)}
-              pageSize={15}
+              pageSize={999}
               totalSize={answers?.count || 0}
             />
           </div>

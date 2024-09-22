@@ -29,17 +29,17 @@ interface Props {
 
 const sortBtns = [
   {
-    name: 'score',
-    sort: 'default',
-  },
-  {
-    name: 'newest',
-    sort: 'updated',
-  },
-  {
     name: 'oldest',
     sort: 'created',
   },
+  // {
+  //   name: 'newest',
+  //   sort: 'updated',
+  // },
+  // {
+  //   name: 'score',
+  //   sort: 'default',
+  // },
 ];
 
 const Index: FC<Props> = ({ count = 0, order = 'default' }) => {

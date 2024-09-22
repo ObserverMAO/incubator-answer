@@ -23,6 +23,7 @@ package main
 
 import (
 	answercmd "github.com/apache/incubator-answer/cmd"
+	_ "github.com/apache/incubator-answer-plugins/connector-basic"
 )
 
 // main godoc

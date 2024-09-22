@@ -72,6 +72,9 @@ type NotificationMessage struct {
 	// The trigger user's url (optional, admin or system operation will not have this field)
 	TriggerUserUrl string `json:"trigger_user_url"`
 
+	//  content maybe question content or answer content or comment content
+	Content string `json:"content"`
+
 	// the question title
 	QuestionTitle string `json:"question_title"`
 	// the question url

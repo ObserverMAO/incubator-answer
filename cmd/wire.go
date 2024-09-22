@@ -32,11 +32,12 @@ import (
 	"github.com/apache/incubator-answer/internal/base/server"
 	"github.com/apache/incubator-answer/internal/base/translator"
 	"github.com/apache/incubator-answer/internal/controller"
-	"github.com/apache/incubator-answer/internal/controller/template_render"
+	templaterender "github.com/apache/incubator-answer/internal/controller/template_render"
 	"github.com/apache/incubator-answer/internal/controller_admin"
 	"github.com/apache/incubator-answer/internal/repo"
 	"github.com/apache/incubator-answer/internal/router"
 	"github.com/apache/incubator-answer/internal/service"
+	"github.com/apache/incubator-answer/internal/service/mixinbot"
 	"github.com/apache/incubator-answer/internal/service/service_config"
 	"github.com/google/wire"
 	"github.com/segmentfault/pacman"
@@ -53,6 +54,7 @@ func initApplication(
 	swaggerConf *router.SwaggerConfig,
 	serviceConf *service_config.ServiceConfig,
 	uiConf *server.UI,
+	mixinbotConf *mixinbot.MixinBotConfig,
 	logConf log.Logger) (*pacman.Application, func(), error) {
 	panic(wire.Build(
 		server.ProviderSetServer,
