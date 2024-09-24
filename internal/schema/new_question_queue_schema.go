@@ -36,13 +36,15 @@ type ExternalNotificationMsg struct {
 }
 
 func CreateNewQuestionNotificationMsg(
-	questionID, questionTitle, questionAuthorUserID string, tags []*entity.Tag) *ExternalNotificationMsg {
+	questionID, questionTitle, questionParsedText, questionAuthorUserID, questionAuthorDisplayName string, tags []*entity.Tag) *ExternalNotificationMsg {
 	questionID = uid.DeShortID(questionID)
 	msg := &ExternalNotificationMsg{
 		NewQuestionTemplateRawData: &NewQuestionTemplateRawData{
-			QuestionAuthorUserID: questionAuthorUserID,
-			QuestionID:           questionID,
-			QuestionTitle:        questionTitle,
+			QuestionAuthorDisplayName: questionAuthorDisplayName,
+			QuestionAuthorUserID:      questionAuthorUserID,
+			QuestionID:                questionID,
+			QuestionTitle:             questionTitle,
+			QuestionParsedText:        questionParsedText,
 		},
 	}
 	for _, tag := range tags {

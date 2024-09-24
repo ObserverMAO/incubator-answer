@@ -27,11 +27,14 @@ import (
 	"github.com/apache/incubator-answer/internal/schema"
 	"github.com/apache/incubator-answer/internal/service/activity_common"
 	"github.com/apache/incubator-answer/internal/service/export"
+	"github.com/apache/incubator-answer/internal/service/mixinbot"
+	mixinbotlang "github.com/apache/incubator-answer/internal/service/mixinbot/lang"
 	"github.com/apache/incubator-answer/internal/service/notice_queue"
 	"github.com/apache/incubator-answer/internal/service/siteinfo_common"
 	usercommon "github.com/apache/incubator-answer/internal/service/user_common"
 	"github.com/apache/incubator-answer/internal/service/user_external_login"
 	"github.com/apache/incubator-answer/internal/service/user_notification_config"
+
 	"github.com/segmentfault/pacman/log"
 )
 
@@ -44,6 +47,8 @@ type ExternalNotificationService struct {
 	notificationQueueService   notice_queue.ExternalNotificationQueueService
 	userExternalLoginRepo      user_external_login.UserExternalLoginRepo
 	siteInfoService            siteinfo_common.SiteInfoCommonService
+	mixinBotService            *mixinbot.MixinBotService
+	langPicker                 *mixinbotlang.LangPicker
 }
 
 func NewExternalNotificationService(
@@ -55,6 +60,7 @@ func NewExternalNotificationService(
 	notificationQueueService notice_queue.ExternalNotificationQueueService,
 	userExternalLoginRepo user_external_login.UserExternalLoginRepo,
 	siteInfoService siteinfo_common.SiteInfoCommonService,
+	mixinbotService *mixinbot.MixinBotService,
 ) *ExternalNotificationService {
 	n := &ExternalNotificationService{
 		data:                       data,
@@ -65,6 +71,8 @@ func NewExternalNotificationService(
 		notificationQueueService:   notificationQueueService,
 		userExternalLoginRepo:      userExternalLoginRepo,
 		siteInfoService:            siteInfoService,
+		mixinBotService:            mixinbotService,
+		langPicker:                 mixinbotlang.NewLangPicker(),
 	}
 	notificationQueueService.RegisterHandler(n.Handler)
 	return n

@@ -21,6 +21,7 @@ package schema
 
 import (
 	"encoding/json"
+
 	"github.com/apache/incubator-answer/internal/base/constant"
 )
 
@@ -127,12 +128,14 @@ type NewCommentTemplateData struct {
 }
 
 type NewQuestionTemplateRawData struct {
-	QuestionAuthorUserID string
-	QuestionTitle        string
-	QuestionID           string
-	UnsubscribeCode      string
-	Tags                 []string
-	TagIDs               []string
+	QuestionAuthorDisplayName string
+	QuestionAuthorUserID      string
+	QuestionTitle             string
+	QuestionParsedText        string
+	QuestionID                string
+	UnsubscribeCode           string
+	Tags                      []string
+	TagIDs                    []string
 }
 
 type NewQuestionTemplateData struct {

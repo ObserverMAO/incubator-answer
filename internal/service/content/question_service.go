@@ -22,9 +22,10 @@ package content
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/apache/incubator-answer/internal/service/event_queue"
 	"strings"
 	"time"
+
+	"github.com/apache/incubator-answer/internal/service/event_queue"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
 	"github.com/apache/incubator-answer/internal/base/handler"
@@ -393,9 +394,14 @@ func (qs *QuestionService) AddQuestion(ctx context.Context, req *schema.Question
 		RevisionID:       revisionID,
 	})
 
+	userInfo, _, err := qs.userCommon.GetUserBasicInfoByID(ctx, question.UserID)
+	if err != nil {
+		log.Errorf("get user basic info by id error %v", err)
+	}
+
 	if question.Status == entity.QuestionStatusAvailable {
 		qs.externalNotificationQueueService.Send(ctx,
-			schema.CreateNewQuestionNotificationMsg(question.ID, question.Title, question.UserID, tags))
+			schema.CreateNewQuestionNotificationMsg(question.ID, question.Title, question.ParsedText, question.UserID, userInfo.DisplayName, tags))
 	}
 	qs.eventQueueService.Send(ctx, schema.NewEvent(constant.EventQuestionCreate, req.UserID).TID(question.ID).
 		QID(question.ID, question.UserID))
