@@ -179,7 +179,13 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	tagService := tag2.NewTagService(tagRepo, tagCommonService, revisionService, followRepo, siteInfoCommonService, activityQueueService)
 	answerActivityRepo := activity.NewAnswerActivityRepo(dataData, activityRepo, userRankRepo, notificationQueueService)
 	answerActivityService := activity2.NewAnswerActivityService(answerActivityRepo, configService)
-	externalNotificationService := notification.NewExternalNotificationService(dataData, userNotificationConfigRepo, followRepo, emailService, userRepo, externalNotificationQueueService, userExternalLoginRepo, siteInfoCommonService)
+	mixinBotService, err := mixinbot.NewMixinBotService(mixinbotConf)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	externalNotificationService := notification.NewExternalNotificationService(dataData, userNotificationConfigRepo, followRepo, emailService, userRepo, externalNotificationQueueService, userExternalLoginRepo, siteInfoCommonService, mixinBotService)
 	reviewRepo := review.NewReviewRepo(dataData)
 	reviewService := review2.NewReviewService(reviewRepo, objService, userCommon, userRepo, questionRepo, answerRepo, userRoleRelService, externalNotificationQueueService, tagCommonService, questionCommon, notificationQueueService, siteInfoCommonService)
 	questionService := content.NewQuestionService(activityRepo, questionRepo, answerRepo, tagCommonService, tagService, questionCommon, userCommon, userRepo, userRoleRelService, revisionService, metaCommonService, collectionCommon, answerActivityService, emailService, notificationQueueService, externalNotificationQueueService, activityQueueService, siteInfoCommonService, externalNotificationService, reviewService, configService, eventQueueService)
@@ -218,12 +224,6 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	siteInfoController := controller_admin.NewSiteInfoController(siteInfoService)
 	controllerSiteInfoController := controller.NewSiteInfoController(siteInfoCommonService)
 	notificationRepo := notification2.NewNotificationRepo(dataData)
-	mixinBotService, err := mixinbot.NewMixinBotService(mixinbotConf)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
 	notificationCommon := notificationcommon.NewNotificationCommon(dataData, notificationRepo, userCommon, activityRepo, followRepo, objService, notificationQueueService, userExternalLoginRepo, siteInfoCommonService, mixinBotService)
 	badgeRepo := badge.NewBadgeRepo(dataData, uniqueIDRepo)
 	notificationService := notification.NewNotificationService(dataData, notificationRepo, notificationCommon, revisionService, userRepo, reportRepo, reviewService, badgeRepo)

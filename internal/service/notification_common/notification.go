@@ -26,7 +26,7 @@ import (
 
 	"github.com/apache/incubator-answer/internal/base/translator"
 	"github.com/apache/incubator-answer/internal/service/mixinbot"
-	notificationcommonlang "github.com/apache/incubator-answer/internal/service/notification_common/lang"
+	mixinbotlang "github.com/apache/incubator-answer/internal/service/mixinbot/lang"
 	"github.com/apache/incubator-answer/internal/service/siteinfo_common"
 	"github.com/apache/incubator-answer/internal/service/user_external_login"
 	"github.com/apache/incubator-answer/pkg/display"
@@ -70,7 +70,7 @@ type NotificationCommon struct {
 	userExternalLoginRepo    user_external_login.UserExternalLoginRepo
 	siteInfoService          siteinfo_common.SiteInfoCommonService
 	mixinbotService          *mixinbot.MixinBotService
-	langPicker               *notificationcommonlang.LangPicker
+	langPicker               *mixinbotlang.LangPicker
 }
 
 func NewNotificationCommon(
@@ -96,7 +96,7 @@ func NewNotificationCommon(
 		userExternalLoginRepo:    userExternalLoginRepo,
 		siteInfoService:          siteInfoService,
 		mixinbotService:          mixinbotService,
-		langPicker:               notificationcommonlang.NewLangPicker(),
+		langPicker:               mixinbotlang.NewLangPicker(),
 	}
 	notificationQueueService.RegisterHandler(notification.AddNotification)
 	return notification
@@ -381,7 +381,7 @@ func (ns *NotificationCommon) syncNotificationToMixin(ctx context.Context, objIn
 		return
 	}
 
-	description := ns.langPicker.Pick(notificationcommonlang.GetLanguage(mixinNotificationMsg.ReceiverLang)).TranslateDescription(mixinNotificationMsg)
+	description := ns.langPicker.Pick(mixinbotlang.GetLanguage(mixinNotificationMsg.ReceiverLang)).TranslateDescription(mixinNotificationMsg)
 	ns.sendMixinNotification(description, mixinNotificationMsg)
 }
 

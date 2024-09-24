@@ -107,9 +107,9 @@ const Ask = () => {
   const editorRef = useRef<EditorRef>({
     getHtml: () => '',
   });
-  const editorRef2 = useRef<EditorRef>({
-    getHtml: () => '',
-  });
+  // const editorRef2 = useRef<EditorRef>({
+  //   getHtml: () => '',
+  // });
 
   const { qid } = useParams();
   const navigate = useNavigate();
@@ -276,20 +276,20 @@ const Ask = () => {
       tags: { value, errorMsg: '', isInvalid: false },
     });
 
-  const handleAnswerChange = (value: string) =>
-    setFormData({
-      ...formData,
-      answer_content: { value, errorMsg: '', isInvalid: false },
-    });
+  // const handleAnswerChange = (value: string) =>
+  //   setFormData({
+  //     ...formData,
+  //     answer_content: { value, errorMsg: '', isInvalid: false },
+  //   });
 
-  const handleSummaryChange = (evt: React.ChangeEvent<HTMLInputElement>) =>
-    setFormData({
-      ...formData,
-      edit_summary: {
-        ...formData.edit_summary,
-        value: evt.currentTarget.value,
-      },
-    });
+  // const handleSummaryChange = (evt: React.ChangeEvent<HTMLInputElement>) =>
+  //   setFormData({
+  //     ...formData,
+  //     edit_summary: {
+  //       ...formData.edit_summary,
+  //       value: evt.currentTarget.value,
+  //     },
+  //   });
 
   const deleteDraft = () => {
     const res = window.confirm(t('discard_confirm', { keyPrefix: 'draft' }));
@@ -504,7 +504,7 @@ const Ask = () => {
               />
             </Form.Group>
 
-            {!isEdit && (
+            {/* {!isEdit && (
               <>
                 <Form.Switch
                   checked={checked}
@@ -560,7 +560,7 @@ const Ask = () => {
                   {formData.edit_summary.errorMsg}
                 </Form.Control.Feedback>
               </Form.Group>
-            )}
+            )} */}
             {!checked && (
               <div className="mt-3">
                 <Button type="submit" className="me-2">

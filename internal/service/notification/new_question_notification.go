@@ -27,6 +27,7 @@ import (
 	"github.com/apache/incubator-answer/internal/base/constant"
 	"github.com/apache/incubator-answer/internal/base/translator"
 	"github.com/apache/incubator-answer/internal/schema"
+	mixinbotlang "github.com/apache/incubator-answer/internal/service/mixinbot/lang"
 	"github.com/apache/incubator-answer/pkg/display"
 	"github.com/apache/incubator-answer/pkg/token"
 	"github.com/apache/incubator-answer/plugin"
@@ -49,7 +50,6 @@ func (ns *ExternalNotificationService) handleNewQuestionNotification(ctx context
 		return err
 	}
 	log.Debugf("get subscribers %d for question %s", len(subscribers), msg.NewQuestionTemplateRawData.QuestionID)
-
 	for _, subscriber := range subscribers {
 		for _, channel := range subscriber.Channels {
 			if !channel.Enable {
@@ -57,6 +57,9 @@ func (ns *ExternalNotificationService) handleNewQuestionNotification(ctx context
 			}
 			switch channel.Key {
 			case constant.EmailChannel:
+				// send mixin notification
+				go ns.sendNewQuestionNotificationToMixin(ctx, msg, subscriber)
+
 				ns.sendNewQuestionNotificationEmail(ctx, subscriber.UserID, &schema.NewQuestionTemplateRawData{
 					QuestionTitle:   msg.NewQuestionTemplateRawData.QuestionTitle,
 					QuestionID:      msg.NewQuestionTemplateRawData.QuestionID,
@@ -70,6 +73,37 @@ func (ns *ExternalNotificationService) handleNewQuestionNotification(ctx context
 
 	ns.syncNewQuestionNotificationToPlugin(ctx, msg)
 	return nil
+}
+
+func (ns *ExternalNotificationService) sendNewQuestionNotificationToMixin(ctx context.Context, msg *schema.ExternalNotificationMsg, subscriber *NewQuestionSubscriber) {
+	pluginNotificationMsg := ns.newPluginQuestionNotification(ctx, msg)
+	pluginNotificationMsg.Type = plugin.NotificationNewQuestion
+
+	if len(subscriber.UserID) > 0 {
+		userInfo, _, _ := ns.userRepo.GetByUserID(ctx, subscriber.UserID)
+		if userInfo != nil && len(userInfo.Language) > 0 && userInfo.Language != translator.DefaultLangOption {
+			pluginNotificationMsg.ReceiverLang = userInfo.Language
+		}
+	}
+
+	userInfo, exist, err := ns.userExternalLoginRepo.GetByUserID(ctx, "basic", subscriber.UserID)
+	if err != nil {
+		log.Errorf("get user external login info failed: %v", err)
+		return
+	}
+	if exist {
+		pluginNotificationMsg.ReceiverExternalID = userInfo.ExternalID
+	} else {
+		return
+	}
+	if len(pluginNotificationMsg.ReceiverExternalID) == 0 {
+		return
+	}
+	pluginNotificationMsg.TriggerUserDisplayName = msg.NewQuestionTemplateRawData.QuestionAuthorDisplayName
+	description := ns.langPicker.Pick(mixinbotlang.GetLanguage(pluginNotificationMsg.ReceiverLang)).TranslateDescription(pluginNotificationMsg)
+	log.Debugf("send mixin message %s", description)
+
+	ns.sendMixinNewQuestionMessage(ctx, description, pluginNotificationMsg.ReceiverExternalID, msg)
 }
 
 func (ns *ExternalNotificationService) getNewQuestionSubscribers(ctx context.Context, msg *schema.ExternalNotificationMsg) (

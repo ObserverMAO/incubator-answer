@@ -259,8 +259,12 @@ func (cs *ReviewService) updateObjectStatus(ctx context.Context, review *entity.
 			if err != nil {
 				log.Errorf("get question tags failed, err: %v", err)
 			}
+			userInfo, _, err := cs.userCommon.GetUserBasicInfoByID(ctx, questionInfo.UserID)
+			if err != nil {
+				log.Errorf("get user basic info by id error %v", err)
+			}
 			cs.externalNotificationQueueService.Send(ctx,
-				schema.CreateNewQuestionNotificationMsg(questionInfo.ID, questionInfo.Title, questionInfo.UserID, tags))
+				schema.CreateNewQuestionNotificationMsg(questionInfo.ID, questionInfo.Title, questionInfo.ParsedText, questionInfo.UserID, userInfo.DisplayName, tags))
 		}
 		userQuestionCount, err := cs.questionRepo.GetUserQuestionCount(ctx, questionInfo.UserID, 0)
 		if err != nil {

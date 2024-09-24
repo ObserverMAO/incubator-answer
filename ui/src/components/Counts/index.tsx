@@ -18,7 +18,7 @@
  */
 
 import { FC, memo } from 'react';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 import classname from 'classnames';
 
@@ -46,7 +46,7 @@ const Index: FC<Props> = ({
   showAccepted = false,
   className = '',
 }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'counts' });
+  // const { t } = useTranslation('translation', { keyPrefix: 'counts' });
 
   return (
     <div className={classname('d-flex align-items-center', className)}>
@@ -54,7 +54,8 @@ const Index: FC<Props> = ({
         <div className="d-flex align-items-center flex-shrink-0">
           <Icon name="hand-thumbs-up-fill me-1" />
           <span>
-            {data.votes} {t('votes')}
+            {data.votes}
+            {/* {t('votes')} */}
           </span>
         </div>
       )}
@@ -62,7 +63,7 @@ const Index: FC<Props> = ({
       {showAccepted && (
         <div className="d-flex align-items-center ms-3 text-success flex-shrink-0">
           <Icon name="check-circle-fill me-1" />
-          <span>{t('accepted')}</span>
+          {/* <span>{t('accepted')}</span> */}
         </div>
       )}
 
@@ -77,7 +78,8 @@ const Index: FC<Props> = ({
             <Icon name="chat-square-text-fill me-1" />
           )}
           <span>
-            {data.answers} {t('answers')}
+            {data.answers}
+            {/* {t('answers')} */}
           </span>
         </div>
       )}
@@ -85,7 +87,8 @@ const Index: FC<Props> = ({
         <span className="summary-stat ms-3 flex-shrink-0">
           <Icon name="eye-fill" />
           <em className="fst-normal ms-1">
-            {data.views} {t('views')}
+            {data.views}
+            {/* {t('views')} */}
           </em>
         </span>
       )}

@@ -21,6 +21,7 @@ package user_notification_config
 
 import (
 	"context"
+
 	"github.com/apache/incubator-answer/internal/base/constant"
 	"github.com/apache/incubator-answer/internal/entity"
 	"github.com/apache/incubator-answer/internal/schema"
@@ -91,6 +92,9 @@ func (us *UserNotificationConfigService) UpdateUserNotificationConfig(
 // SetDefaultUserNotificationConfig set default user notification config for user register
 func (us *UserNotificationConfigService) SetDefaultUserNotificationConfig(ctx context.Context, userIDs []string) (
 	err error) {
+	// set default user notification config for external user
+	_ = us.userNotificationConfigRepo.Add(ctx, userIDs,
+		string(constant.InboxSource), `[{"key":"all_new_question_for_following_tags","enable":true}]`)
 	return us.userNotificationConfigRepo.Add(ctx, userIDs,
 		string(constant.InboxSource), `[{"key":"email","enable":true}]`)
 }
