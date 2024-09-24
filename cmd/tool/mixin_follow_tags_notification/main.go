@@ -19,14 +19,12 @@ var (
 func main() {
 
 	flag.Parse()
-	// xorm
 	engine, err := xorm.NewEngine("sqlite", *dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer engine.Close()
 
-	// 查询所有用户
 	users := make([]entity.User, 0)
 	err = engine.Find(&users)
 	if err != nil {
