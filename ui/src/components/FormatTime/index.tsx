@@ -24,21 +24,17 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 
-import { pathFactory } from '@/router/pathFactory';
-
 interface Props {
   time: number;
   className?: string;
   preFix?: string;
   questionId?: string | null;
-  slugTitle?: string;
   answerId?: string | null;
   operation_type?: string;
 }
 
 const Index: FC<Props> = ({
   questionId,
-  slugTitle,
   answerId,
   time,
   preFix,
@@ -113,14 +109,7 @@ const Index: FC<Props> = ({
 
   if (operation_type === 'answered') {
     return (
-      <Link
-        to={pathFactory.answerLanding({
-          questionId: questionId || '',
-          slugTitle: slugTitle || '',
-          answerId: answerId || '',
-        })}>
-        {timeElement}
-      </Link>
+      <Link to={`/questions/${questionId}/${answerId}`}>{timeElement}</Link>
     );
   }
 
