@@ -116,7 +116,6 @@ const QuestionList: FC<Props> = ({
                       showAvatar={false}
                       className="me-1"
                     />
-                    •
                     <FormatTime
                       questionId={li.id}
                       answerId={li.last_answer_id}

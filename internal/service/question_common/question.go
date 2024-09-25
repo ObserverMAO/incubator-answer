@@ -350,6 +350,8 @@ func (qs *QuestionCommon) FormatQuestionsPage(
 	formattedQuestions = make([]*schema.QuestionPageResp, 0)
 	questionIDs := make([]string, 0)
 	userIDs := make([]string, 0)
+
+	shortIDFlag := handler.GetEnableShortID(ctx)
 	for _, questionInfo := range questionList {
 		t := &schema.QuestionPageResp{
 			ID:               questionInfo.ID,
@@ -368,6 +370,10 @@ func (qs *QuestionCommon) FormatQuestionsPage(
 			LastAnswerID:     questionInfo.LastAnswerID,
 			Pin:              questionInfo.Pin,
 			Show:             questionInfo.Show,
+		}
+
+		if shortIDFlag {
+			questionInfo.LastAnswerID = uid.EnShortID(questionInfo.LastAnswerID)
 		}
 
 		questionIDs = append(questionIDs, questionInfo.ID)
