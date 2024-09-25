@@ -119,7 +119,6 @@ const QuestionList: FC<Props> = ({
                     •
                     <FormatTime
                       questionId={li.id}
-                      slugTitle={li.url_title}
                       answerId={li.last_answer_id}
                       time={li.operated_at}
                       // className="text-secondary ms-1 flex-shrink-0"
