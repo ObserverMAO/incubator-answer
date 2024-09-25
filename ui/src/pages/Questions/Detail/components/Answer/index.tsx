@@ -105,7 +105,6 @@ const Index: FC<Props> = ({
           {t('post_pending', { keyPrefix: 'messages' })}
         </Alert>
       )}
-
       {data?.accepted === 2 && (
         <div className="mb-3 lh-1">
           <Badge bg="success" pill>
@@ -149,7 +148,6 @@ const Index: FC<Props> = ({
           </Button>
         )}
       </div>
-
       <div className="d-block d-md-flex flex-wrap mt-4 mb-3">
         <div className="mb-3 mb-md-0 me-4 flex-grow-1">
           <Operate
@@ -198,7 +196,6 @@ const Index: FC<Props> = ({
           />
         </div>
       </div>
-
       <Comment
         objectId={data.id}
         mode="answer"
