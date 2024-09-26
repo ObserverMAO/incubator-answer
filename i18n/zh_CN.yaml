@@ -412,7 +412,7 @@ backend:
           other: 该帖子存在上面没有列出的另一个原因。
     operation_type:
       asked:
-        other: 提问于
+        other: 发起于
       answered:
         other: 回复于
       modified:
@@ -1349,8 +1349,8 @@ ui:
     search: 搜索人员
   question_detail:
     action: 操作
-    Asked: 提问于
-    asked: 提问于
+    Asked: 发起于
+    asked: 发起于
     update: 修改于
     edit: 编辑于
     commented: 评论
@@ -1530,7 +1530,7 @@ ui:
     unanswered: 未回复
     modified: 更新于
     answered: 回复于
-    asked: 提问于
+    asked: 发起于
     closed: 已关闭
     follow_a_tag: 关注一个标签
     more: 更多
@@ -1561,7 +1561,7 @@ ui:
     list_empty: 没有找到相关的内容。<br />试试看其他选项卡？
     accepted: 已采纳
     answered: 回复于
-    asked: 提问于
+    asked: 发起于
     downvoted: 点踩
     mod_short: 版主
     mod_long: 版主
@@ -2179,7 +2179,7 @@ ui:
     rollback: 回滚
     edited: 最后编辑于
     answered: 回复于
-    asked: 提问于
+    asked: 发起于
     closed: 关闭
     reopened: 重新开启
     created: 创建于

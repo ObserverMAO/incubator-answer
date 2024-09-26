@@ -78,7 +78,7 @@ func (z *ZhCN) getDescriptionTemplate(msgType plugin.NotificationType) string {
 
 const (
 	zhCnTplUpdateQuestionDescription         = "%s 更新了话题"
-	zhCnTplAnswerTheQuestionDescription      = "%s 回答了话题"
+	zhCnTplAnswerTheQuestionDescription      = "%s 回复了话题"
 	zhCnTplUpVotedTheQuestionDescription     = "%s 赞了话题"
 	zhCnTplDownVotedTheQuestionDescription   = "%s 踩了话题"
 	zhCnTplUpdateAnswerDescription           = "%s 更新了回复"
