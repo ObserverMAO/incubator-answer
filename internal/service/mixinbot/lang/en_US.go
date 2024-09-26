@@ -75,7 +75,7 @@ func (e *EnUS) getDescriptionTemplate(msgType plugin.NotificationType) string {
 
 const (
 	enUsTplUpdateQuestionDescription         = "%s updated the topic"
-	enUsTplAnswerTheQuestionDescription      = "%s answered the topic"
+	enUsTplAnswerTheQuestionDescription      = "%s replied the topic"
 	enUsTplUpVotedTheQuestionDescription     = "%s upvoted the topic"
 	enUsTplDownVotedTheQuestionDescription   = "%s downvoted the topic"
 	enUsTplUpdateAnswerDescription           = "%s updated the reply"
