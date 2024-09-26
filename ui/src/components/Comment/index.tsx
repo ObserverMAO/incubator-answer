@@ -56,7 +56,8 @@ const Comment = ({ objectId, mode, commentId }) => {
   const [visibleComment, setVisibleComment] = useState(false);
   const { id: currentReplyId, update: updateCurrentReplyId } =
     commentReplyStore();
-  const pageSize = pageIndex === 0 ? 3 : 15;
+  // const pageSize = pageIndex === 0 ? 3 : 15;
+  const pageSize = 999;
   const { data, mutate } = useQueryComments({
     object_id: objectId,
     comment_id: commentId,
