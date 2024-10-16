@@ -60,6 +60,9 @@ func IsSupportedImageFile(localFilePath string) bool {
 		if !decodeAndCheckImageFile(localFilePath, webpImageCheck) {
 			return false
 		}
+	case "mp4", "mov", "avi", "wmv", "flv", "webm", "mkv":
+		// TODO: There is currently no good Golang library to check whether the video is in mp4, mov, avi, wmv, flv, webm, mkv format.
+		return true
 	default:
 		return false
 	}

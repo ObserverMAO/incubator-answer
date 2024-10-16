@@ -926,6 +926,33 @@ ui:
       btn_cancel: 取消
       btn_confirm: 添加
       uploading: 上传中
+    video:
+      text: 视频
+      add_video: 添加视频
+      tab_video: 上传视频
+      form_video:
+        fields:
+          file:
+            label: 视频文件
+            btn: 选择视频
+            msg:
+              empty: 请选择视频文件。
+              only_video: 只能上传视频文件。
+              max_size: 文件大小不能超过 512 MB。
+          desc:
+            label: 描述
+      tab_url: 视频地址
+      form_url:
+        fields:
+          url:
+            label: 视频地址
+            msg:
+              empty: 视频地址不能为空
+          name:
+            label: 描述
+      btn_cancel: 取消
+      btn_confirm: 添加
+      uploading: 上传中
     indent:
       text: 缩进
     outdent:

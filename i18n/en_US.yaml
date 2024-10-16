@@ -934,6 +934,33 @@ ui:
       btn_cancel: Cancel
       btn_confirm: Add
       uploading: Uploading
+    video:
+      text: Video
+      add_video: Add video
+      tab_video: Upload video
+      form_video:
+        fields:
+          file:
+            label: Video file
+            btn: Select video
+            msg:
+              empty: Please select a video file.
+              only_video: Only video files are allowed.
+              max_size: File size cannot exceed 512 MB.
+          desc:
+            label: Description
+      tab_url: Video URL
+      form_url:
+        fields:
+          url:
+            label: Video URL
+            msg:
+              empty: Video URL cannot be empty
+          name:
+            label: Description
+      btn_cancel: Cancel
+      btn_confirm: Add
+      uploading: Uploading
     indent:
       text: Indent
     outdent:
