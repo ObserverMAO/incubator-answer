@@ -25,6 +25,7 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/microcosm-cc/bluemonday"
+	enclave "github.com/lixvyang/goldmark-enclave"
 	"github.com/segmentfault/pacman/log"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
@@ -39,7 +40,7 @@ import (
 // Markdown2HTML convert markdown to html
 func Markdown2HTML(source string) string {
 	mdConverter := goldmark.New(
-		goldmark.WithExtensions(&DangerousHTMLFilterExtension{}, extension.GFM),
+		goldmark.WithExtensions(&DangerousHTMLFilterExtension{}, extension.GFM, enclave.New(&enclave.Config{})),
 		goldmark.WithParserOptions(
 			parser.WithAutoHeadingID(),
 		),
@@ -53,14 +54,14 @@ func Markdown2HTML(source string) string {
 		return source
 	}
 	html := buf.String()
-	filter := bluemonday.UGCPolicy()
-	filter.AllowStyling()
-	filter.RequireNoFollowOnLinks(false)
-	filter.RequireParseableURLs(false)
-	filter.RequireNoFollowOnFullyQualifiedLinks(false)
-	filter.AllowElements("kbd")
-	filter.AllowAttrs("title").Matching(regexp.MustCompile(`^[\p{L}\p{N}\s\-_',\[\]!\./\\\(\)]*$|^@embed?$`)).Globally()
-	html = filter.Sanitize(html)
+	// filter := bluemonday.UGCPolicy()
+	// filter.AllowStyling()
+	// filter.RequireNoFollowOnLinks(false)
+	// filter.RequireParseableURLs(false)
+	// filter.RequireNoFollowOnFullyQualifiedLinks(false)
+	// filter.AllowElements("kbd")
+	// filter.AllowAttrs("title").Matching(regexp.MustCompile(`^[\p{L}\p{N}\s\-_',\[\]!\./\\\(\)]*$|^@embed?$`)).Globally()
+	// html = filter.Sanitize(html)
 	return html
 }
 

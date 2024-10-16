@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -38,6 +39,7 @@ import {
   Help,
   Hr,
   Image,
+  Video,
   Indent,
   Italice,
   Link as LinkItem,
@@ -130,6 +132,7 @@ const MDEditor: ForwardRefRenderFunction<EditorRef, Props> = (
               <LinkItem />
               <BlockQuote />
               <Image editorInstance={editor} />
+              <Video editorInstance={editor} />
               <Table />
               <div className="toolbar-divider" />
               <OL />

@@ -41,6 +41,13 @@ var (
 			".png":  true,
 			".gif":  true,
 			".webp": true,
+			".mp4":  true,
+			".mov":  true,
+			".avi":  true,
+			".wmv":  true,
+			".flv":  true,
+			".webm": true,
+			".mkv":  true,
 		},
 		AdminBranding: {
 			".jpg":  true,

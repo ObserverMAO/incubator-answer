@@ -32,6 +32,7 @@ import BlockQuote from './blockquote';
 import Image from './image';
 import Help from './help';
 import Chart from './chart';
+import Video from './video';
 
 export {
   Table,
@@ -49,4 +50,5 @@ export {
   Image,
   Help,
   Chart,
+  Video,
 };
