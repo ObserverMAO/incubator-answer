@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,6 +37,7 @@ import { scrollToElementTop, bgFadeOut } from '@/utils';
 import { AnswerItem } from '@/common/interface';
 import { acceptanceAnswer } from '@/services';
 import { useRenderHtmlPlugin } from '@/utils/pluginKit';
+import VideoViewer from '@/components/VideoViewer';
 
 interface Props {
   data: AnswerItem;
@@ -114,12 +116,14 @@ const Index: FC<Props> = ({
           </Badge>
         </div>
       )}
+      {/* <VideoViewer> */}
       <ImgViewer>
         <article
           className="fmt text-break text-wrap"
           dangerouslySetInnerHTML={{ __html: data?.html }}
         />
       </ImgViewer>
+      {/* </VideoViewer> */}
       <div className="d-flex align-items-center mt-4">
         <Actions
           source="answer"

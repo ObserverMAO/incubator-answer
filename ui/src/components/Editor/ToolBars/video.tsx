@@ -16,8 +16,8 @@ const Video = ({ editorInstance }) => {
   const loadingText = `![${t('video.uploading')}...]()`;
   const item = {
     label: 'camera-video',
-    keyMap: ['Ctrl-j'],
-    tip: `${t('video.text')} (Ctrl+J)`,
+    keyMap: ['Ctrl-v'],
+    tip: `${t('video.text')} (Ctrl+V)`
   };
   const [currentTab, setCurrentTab] = useState('localVideo');
   const [visible, setVisible] = useState(false);

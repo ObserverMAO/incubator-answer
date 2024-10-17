@@ -17,7 +17,9 @@
 
 module github.com/apache/incubator-answer
 
-go 1.18
+go 1.21
+
+toolchain go1.22.4
 
 require (
 	github.com/Chain-Zhang/pinyin v0.1.3
@@ -58,7 +60,7 @@ require (
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.16.3
 	github.com/tidwall/gjson v1.14.4
-	github.com/yuin/goldmark v1.4.13
+	github.com/yuin/goldmark v1.7.4
 	golang.org/x/crypto v0.27.0
 	golang.org/x/image v0.13.0
 	golang.org/x/net v0.29.0
@@ -78,6 +80,7 @@ require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/apache/incubator-answer-plugins/embed-basic v1.0.5 // indirect
 	github.com/apache/incubator-answer-plugins/util v1.0.2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/btcsuite/btcutil v1.0.2 // indirect
@@ -124,6 +127,7 @@ require (
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible // indirect
 	github.com/lestrrat-go/strftime v1.0.6 // indirect
+	github.com/lixvyang/goldmark-enclave v0.0.2 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
