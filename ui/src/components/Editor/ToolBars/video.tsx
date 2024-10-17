@@ -17,7 +17,7 @@ const Video = ({ editorInstance }) => {
   const item = {
     label: 'camera-video',
     keyMap: ['Ctrl-v'],
-    tip: `${t('video.text')} (Ctrl+V)`
+    tip: `${t('video.text')} (Ctrl+V)`,
   };
   const [currentTab, setCurrentTab] = useState('localVideo');
   const [visible, setVisible] = useState(false);
