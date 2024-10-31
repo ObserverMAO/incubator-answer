@@ -39,6 +39,7 @@ import (
 	"github.com/apache/incubator-answer/internal/service"
 	"github.com/apache/incubator-answer/internal/service/mixinbot"
 	"github.com/apache/incubator-answer/internal/service/service_config"
+	"github.com/apache/incubator-answer/internal/service/uploader"
 	"github.com/google/wire"
 	"github.com/segmentfault/pacman"
 	"github.com/segmentfault/pacman/log"
@@ -55,6 +56,7 @@ func initApplication(
 	serviceConf *service_config.ServiceConfig,
 	uiConf *server.UI,
 	mixinbotConf *mixinbot.MixinBotConfig,
+	storageConf *uploader.StorageConfig,
 	logConf log.Logger) (*pacman.Application, func(), error) {
 	panic(wire.Build(
 		server.ProviderSetServer,

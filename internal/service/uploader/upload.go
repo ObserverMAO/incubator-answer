@@ -29,6 +29,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/apache/incubator-answer/internal/base/reason"
 	"github.com/apache/incubator-answer/internal/service/service_config"
@@ -37,12 +38,28 @@ import (
 	"github.com/apache/incubator-answer/pkg/dir"
 	"github.com/apache/incubator-answer/pkg/uid"
 	"github.com/apache/incubator-answer/plugin"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	exifremove "github.com/scottleedavis/go-exif-remove"
 	"github.com/segmentfault/pacman/errors"
 	"github.com/segmentfault/pacman/log"
 )
+
+type StorageConfig struct {
+	Enable          bool   `json:"enable" mapstructure:"enable" yaml:"enable"`
+	Bucket          string `json:"bucket" mapstructure:"bucket" yaml:"bucket"`
+	BaseURL         string `json:"base_url" mapstructure:"base_url" yaml:"base_url"`
+	Path            string `json:"path" mapstructure:"path" yaml:"path"`
+	AccountID       string `json:"account_id" mapstructure:"account_id" yaml:"account_id"`
+	AccessKeyID     string `json:"access_key_id" mapstructure:"access_key_id" yaml:"access_key_id"`
+	AccessKeySecret string `json:"access_key_secret" mapstructure:"access_key_secret" yaml:"access_key_secret"`
+}
 
 const (
 	avatarSubPath      = "avatar"
@@ -76,11 +93,13 @@ type UploaderService interface {
 // uploaderService uploader service
 type uploaderService struct {
 	serviceConfig   *service_config.ServiceConfig
+	storageConfig   *StorageConfig
 	siteInfoService siteinfo_common.SiteInfoCommonService
 }
 
 // NewUploaderService new upload service
 func NewUploaderService(serviceConfig *service_config.ServiceConfig,
+	storageConfig *StorageConfig,
 	siteInfoService siteinfo_common.SiteInfoCommonService) UploaderService {
 	for _, subPath := range subPathList {
 		err := dir.CreateDirIfNotExist(filepath.Join(serviceConfig.UploadPath, subPath))
@@ -90,6 +109,7 @@ func NewUploaderService(serviceConfig *service_config.ServiceConfig,
 	}
 	return &uploaderService{
 		serviceConfig:   serviceConfig,
+		storageConfig:   storageConfig,
 		siteInfoService: siteInfoService,
 	}
 }
@@ -184,7 +204,7 @@ func (us *uploaderService) UploadPostFile(ctx *gin.Context) (
 	}
 
 	// max size
-	ctx.Request.Body = http.MaxBytesReader(ctx.Writer, ctx.Request.Body, 10*1024*1024)
+	ctx.Request.Body = http.MaxBytesReader(ctx.Writer, ctx.Request.Body, 512*1024*1024)
 	file, fileHeader, err := ctx.Request.FormFile("file")
 	if err != nil {
 		return "", errors.BadRequest(reason.RequestFormatError).WithError(err)
@@ -196,8 +216,13 @@ func (us *uploaderService) UploadPostFile(ctx *gin.Context) (
 	}
 
 	newFilename := fmt.Sprintf("%s%s", uid.IDStr12(), fileExt)
-	avatarFilePath := path.Join(postSubPath, newFilename)
-	return us.uploadFile(ctx, fileHeader, avatarFilePath)
+	postFilePath := path.Join(postSubPath, newFilename)
+
+	if us.storageConfig.Enable {
+		return us.uploadFileByStorage(ctx, fileHeader, postFilePath)
+	}
+
+	return us.uploadFile(ctx, fileHeader, postFilePath)
 }
 
 func (us *uploaderService) UploadBrandingFile(ctx *gin.Context) (
@@ -254,6 +279,73 @@ func (us *uploaderService) uploadFile(ctx *gin.Context, file *multipart.FileHead
 
 	url = fmt.Sprintf("%s/uploads/%s", siteGeneral.SiteUrl, fileSubPath)
 	return url, nil
+}
+
+func (us *uploaderService) uploadFileByStorage(ctx *gin.Context, file *multipart.FileHeader, fileSubPath string) (
+	url string, err error) {
+
+	session := us.newSession()
+	client := s3manager.NewUploader(session)
+
+	fileName := fmt.Sprintf("%s/%s", us.storageConfig.Path, fileSubPath)
+	f, openError := file.Open()
+	if openError != nil {
+		log.Error("open file failed", openError)
+		return "", errors.InternalServer(reason.UnknownError).WithError(openError).WithStack()
+	}
+	defer f.Close() // 创建文件 defer 关闭
+
+	input := &s3manager.UploadInput{
+		Bucket: aws.String(us.storageConfig.Bucket),
+		Key:    aws.String(fileName),
+		Body:   f,
+	}
+	now := time.Now()
+	_, err = client.Upload(input)
+	if err != nil {
+		log.Error("upload file to storage failed", err)
+		return "", errors.InternalServer(reason.UnknownError).WithError(err).WithStack()
+	}
+	log.Info("spend time", time.Since(now))
+
+	return fmt.Sprintf("%s/%s", us.storageConfig.BaseURL, fileName), nil
+}
+
+// TODO: delete file from storage
+func (us *uploaderService) DeleteFile(key string) error {
+	session := us.newSession()
+	svc := s3.New(session)
+	filename := fmt.Sprintf("%s/%s", us.storageConfig.Path, key)
+	bucket := us.storageConfig.Bucket
+
+	_, err := svc.DeleteObject(&s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(filename),
+	})
+	if err != nil {
+		log.Error("delete file from storage failed", err)
+		return errors.InternalServer(reason.UnknownError).WithError(err).WithStack()
+	}
+
+	_ = svc.WaitUntilObjectNotExists(&s3.HeadObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(filename),
+	})
+	return nil
+}
+
+func (us *uploaderService) newSession() *session.Session {
+	endpoint := fmt.Sprintf("%s.r2.cloudflarestorage.com", us.storageConfig.AccountID)
+
+	return session.Must(session.NewSession(&aws.Config{
+		Region:   aws.String("auto"),
+		Endpoint: aws.String(endpoint),
+		Credentials: credentials.NewStaticCredentials(
+			us.storageConfig.AccessKeyID,
+			us.storageConfig.AccessKeySecret,
+			"",
+		),
+	}))
 }
 
 func (us *uploaderService) tryToUploadByPlugin(ctx *gin.Context, source plugin.UploadSource) (

@@ -49,7 +49,7 @@ const Video = ({ editorInstance }) => {
       return false;
     }
     const filteredVideos = Array.from(files).filter(
-      (file) => file.size / 1024 / 1024 > 100,
+      (file) => file.size / 1024 / 1024 > 512, // max size 512MB
     );
 
     if (filteredVideos.length > 0) {
@@ -66,7 +66,6 @@ const Video = ({ editorInstance }) => {
   ): Promise<{ url: string; name: string }[]> => {
     const promises = Array.from(files).map(async (file) => {
       const url = await uploadImage({ file, type: 'post' });
-
       return {
         name: file.name,
         url,
@@ -224,7 +223,7 @@ const Video = ({ editorInstance }) => {
         </Modal.Header>
         <Modal.Body>
           <Tabs onSelect={handleSelect}>
-            {/* <Tab eventKey="localVideo" title={t('video.tab_video')}>
+            <Tab eventKey="localVideo" title={t('video.tab_video')}>
               <Form className="mt-3" onSubmit={handleClick}>
                 <Form.Group controlId="editor.videoLink" className="mb-3">
                   <Form.Label>
@@ -262,7 +261,7 @@ const Video = ({ editorInstance }) => {
                   />
                 </Form.Group>
               </Form>
-            </Tab> */}
+            </Tab>
 
             <Tab eventKey="remoteVideo" title={t('video.tab_url')}>
               <Form className="mt-3" onSubmit={handleClick}>

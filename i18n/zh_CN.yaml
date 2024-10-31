@@ -938,7 +938,7 @@ ui:
             msg:
               empty: 请选择视频文件。
               only_video: 只能上传视频文件。
-              max_size: 文件大小不能超过 512 MB。
+              max_size: 视频文件大小不能超过 512 MB。
           desc:
             label: 描述
       tab_url: 视频地址
