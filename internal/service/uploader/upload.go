@@ -284,29 +284,29 @@ func (us *uploaderService) uploadFile(ctx *gin.Context, file *multipart.FileHead
 func (us *uploaderService) uploadFileByStorage(ctx *gin.Context, file *multipart.FileHeader, fileSubPath string) (
 	url string, err error) {
 
-	session := us.newSession()
-	client := s3manager.NewUploader(session)
-
 	fileName := fmt.Sprintf("%s/%s", us.storageConfig.Path, fileSubPath)
-	f, openError := file.Open()
-	if openError != nil {
-		log.Error("open file failed", openError)
-		return "", errors.InternalServer(reason.UnknownError).WithError(openError).WithStack()
-	}
-	defer f.Close() // 创建文件 defer 关闭
+	go func() {
+		session := us.newSession()
+		client := s3manager.NewUploader(session)
 
-	input := &s3manager.UploadInput{
-		Bucket: aws.String(us.storageConfig.Bucket),
-		Key:    aws.String(fileName),
-		Body:   f,
-	}
-	now := time.Now()
-	_, err = client.Upload(input)
-	if err != nil {
-		log.Error("upload file to storage failed", err)
-		return "", errors.InternalServer(reason.UnknownError).WithError(err).WithStack()
-	}
-	log.Info("spend time", time.Since(now))
+		f, openError := file.Open()
+		if openError != nil {
+			log.Error("open file failed", openError)
+		}
+		defer f.Close() // 创建文件 defer 关闭
+
+		input := &s3manager.UploadInput{
+			Bucket: aws.String(us.storageConfig.Bucket),
+			Key:    aws.String(fileName),
+			Body:   f,
+		}
+		now := time.Now()
+		_, err = client.Upload(input)
+		if err != nil {
+			log.Error("upload file to storage failed", err)
+		}
+		log.Info("spend time", time.Since(now))
+	}()
 
 	return fmt.Sprintf("%s/%s", us.storageConfig.BaseURL, fileName), nil
 }
