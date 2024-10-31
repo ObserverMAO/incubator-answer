@@ -31,6 +31,7 @@ import (
 	"github.com/apache/incubator-answer/internal/router"
 	"github.com/apache/incubator-answer/internal/service/mixinbot"
 	"github.com/apache/incubator-answer/internal/service/service_config"
+	"github.com/apache/incubator-answer/internal/service/uploader"
 	"github.com/apache/incubator-answer/pkg/writer"
 	"github.com/segmentfault/pacman/contrib/conf/viper"
 	"gopkg.in/yaml.v3"
@@ -46,6 +47,7 @@ type AllConfig struct {
 	Swaggerui      *router.SwaggerConfig         `json:"swaggerui" mapstructure:"swaggerui" yaml:"swaggerui"`
 	UI             *server.UI                    `json:"ui" mapstructure:"ui" yaml:"ui"`
 	MixinBotConfig *mixinbot.MixinBotConfig      `json:"mixinbot_config" mapstructure:"mixinbot_config" yaml:"mixinbot_config"`
+	StorageConfig  *uploader.StorageConfig       `json:"storage_config" mapstructure:"storage_config" yaml:"storage_config"`
 }
 
 type envConfigOverrides struct {

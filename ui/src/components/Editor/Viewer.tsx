@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-duplicate-props */
+/* eslint-disable jsx-a11y/media-has-caption */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

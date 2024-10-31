@@ -43,3 +43,11 @@ mixinbot_config:
   server_public_key: ""
   session_private_key: ""
   spend_key: ""
+storage_config:
+  enable: true
+  bucket: "test"
+  base_url: "https://test.betxin.one"
+  path: "test_path"
+  account_id: "4aadd817a26383825dea2ac18dd5cd7e"
+  access_key_id: "ee9b6727544a3e48c5608f181a97bca5"
+  access_key_secret: "0f1e7f637132276fa3210a8de3a114f03ed1aa3ec49415cf05da7e6eca3ad6dc"

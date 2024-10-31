@@ -946,7 +946,7 @@ ui:
             msg:
               empty: Please select a video file.
               only_video: Only video files are allowed.
-              max_size: File size cannot exceed 512 MB.
+              max_size: Video file size cannot exceed 512 MB.
           desc:
             label: Description
       tab_url: Video URL

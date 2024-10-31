@@ -99,7 +99,7 @@ import (
 // Injectors from wire.go:
 
 // initApplication init application.
-func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database, cacheConf *data.CacheConf, i18nConf *translator.I18n, swaggerConf *router.SwaggerConfig, serviceConf *service_config.ServiceConfig, uiConf *server.UI, mixinbotConf *mixinbot.MixinBotConfig, logConf log.Logger) (*pacman.Application, func(), error) {
+func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database, cacheConf *data.CacheConf, i18nConf *translator.I18n, swaggerConf *router.SwaggerConfig, serviceConf *service_config.ServiceConfig, uiConf *server.UI, mixinbotConf *mixinbot.MixinBotConfig, storageConf *uploader.StorageConfig, logConf log.Logger) (*pacman.Application, func(), error) {
 	staticRouter := router.NewStaticRouter(serviceConf)
 	i18nTranslator, err := translator.NewTranslator(i18nConf)
 	if err != nil {
@@ -230,7 +230,7 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	notificationController := controller.NewNotificationController(notificationService, rankService)
 	dashboardService := dashboard.NewDashboardService(questionRepo, answerRepo, commentCommonRepo, voteRepo, userRepo, reportRepo, configService, siteInfoCommonService, serviceConf, reviewService, revisionRepo, dataData)
 	dashboardController := controller.NewDashboardController(dashboardService)
-	uploaderService := uploader.NewUploaderService(serviceConf, siteInfoCommonService)
+	uploaderService := uploader.NewUploaderService(serviceConf, storageConf, siteInfoCommonService)
 	uploadController := controller.NewUploadController(uploaderService)
 	activityActivityRepo := activity.NewActivityRepo(dataData, configService)
 	activityCommon := activity_common2.NewActivityCommon(activityRepo, activityQueueService)

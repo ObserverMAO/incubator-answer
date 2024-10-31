@@ -24,8 +24,8 @@ import (
 	"regexp"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/microcosm-cc/bluemonday"
 	enclave "github.com/lixvyang/goldmark-enclave"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/segmentfault/pacman/log"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
