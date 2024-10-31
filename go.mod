@@ -46,7 +46,7 @@ require (
 	github.com/jinzhu/copier v0.3.5
 	github.com/jinzhu/now v1.1.5
 	github.com/lib/pq v1.10.7
-	github.com/lixvyang/goldmark-enclave v0.0.5
+	github.com/lixvyang/goldmark-enclave v0.0.6
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -117,7 +117,6 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
-	github.com/google/subcommands v1.0.1 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
