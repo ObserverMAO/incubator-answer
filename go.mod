@@ -28,7 +28,7 @@ require (
 	github.com/anargu/gin-brotli v0.0.0-20220116052358-12bf532d5267
 	github.com/apache/incubator-answer-plugins/connector-basic v1.2.7
 	github.com/apache/incubator-answer-plugins/embed-basic v1.0.5
-	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
+	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/aws/aws-sdk-go v1.27.0
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/disintegration/imaging v1.6.2
@@ -46,8 +46,8 @@ require (
 	github.com/jinzhu/copier v0.3.5
 	github.com/jinzhu/now v1.1.5
 	github.com/lib/pq v1.10.7
-	github.com/lixvyang/goldmark-enclave v0.0.6
-	github.com/microcosm-cc/bluemonday v1.0.21
+	github.com/lixvyang/goldmark-enclave v0.0.7
+	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/scottleedavis/go-exif-remove v0.0.0-20230314195146-7e059d593405
@@ -63,7 +63,7 @@ require (
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.16.3
 	github.com/tidwall/gjson v1.14.4
-	github.com/yuin/goldmark v1.7.4
+	github.com/yuin/goldmark v1.7.8
 	golang.org/x/crypto v0.27.0
 	golang.org/x/image v0.13.0
 	golang.org/x/net v0.29.0
@@ -117,7 +117,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
-	github.com/gorilla/css v1.0.0 // indirect
+	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
