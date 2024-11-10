@@ -41,6 +41,32 @@ const Video = ({ editorInstance }) => {
   const [uploadStatus, setUploadStatus] = useState<
     'uploading' | 'success' | 'error'
   >('uploading');
+  // const verifyVideoSize = (files: FileList) => {
+  //   if (files.length === 0) {
+  //     return false;
+  //   }
+  //   const filteredFiles = Array.from(files).filter(
+  //     (file) => !file.type.startsWith('video/'),
+  //   );
+
+  //   if (filteredFiles.length > 0) {
+  //     AnswerModal.confirm({
+  //       content: t('video.form_video.fields.file.msg.only_video'),
+  //     });
+  //     return false;
+  //   }
+  //   const filteredVideos = Array.from(files).filter(
+  //     (file) => file.size / 1024 / 1024 > 512, // max size 512MB
+  //   );
+
+  //   if (filteredVideos.length > 0) {
+  //     AnswerModal.confirm({
+  //       content: t('video.form_video.fields.file.msg.max_size'),
+  //     });
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const upload = (
     files: FileList,
