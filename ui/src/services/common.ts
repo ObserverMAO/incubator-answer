@@ -23,11 +23,17 @@ import useSWR from 'swr';
 import request from '@/utils/request';
 import type * as Type from '@/common/interface';
 
-export const uploadImage = (params: { file: File; type: Type.UploadType }) => {
+export const uploadImage = (params: {
+  file: File;
+  type: Type.UploadType;
+  onUploadProgress?: (progressEvent: any) => void;
+}) => {
   const form = new FormData();
   form.append('source', String(params.type));
   form.append('file', params.file);
-  return request.post('/answer/api/v1/file', form);
+  return request.post('/answer/api/v1/file', form, {
+    onUploadProgress: params.onUploadProgress,
+  });
 };
 
 export const queryQuestionByTitle = (title: string) => {
