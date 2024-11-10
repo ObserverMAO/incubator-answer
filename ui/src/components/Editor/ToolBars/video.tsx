@@ -34,32 +34,32 @@ const Video = ({ editorInstance }) => {
     errorMsg: '',
   });
 
-  const verifyVideoSize = (files: FileList) => {
-    if (files.length === 0) {
-      return false;
-    }
-    const filteredFiles = Array.from(files).filter(
-      (file) => !file.type.startsWith('video/'),
-    );
+  // const verifyVideoSize = (files: FileList) => {
+  //   if (files.length === 0) {
+  //     return false;
+  //   }
+  //   const filteredFiles = Array.from(files).filter(
+  //     (file) => !file.type.startsWith('video/'),
+  //   );
 
-    if (filteredFiles.length > 0) {
-      AnswerModal.confirm({
-        content: t('video.form_video.fields.file.msg.only_video'),
-      });
-      return false;
-    }
-    const filteredVideos = Array.from(files).filter(
-      (file) => file.size / 1024 / 1024 > 512, // max size 512MB
-    );
+  //   if (filteredFiles.length > 0) {
+  //     AnswerModal.confirm({
+  //       content: t('video.form_video.fields.file.msg.only_video'),
+  //     });
+  //     return false;
+  //   }
+  //   const filteredVideos = Array.from(files).filter(
+  //     (file) => file.size / 1024 / 1024 > 512, // max size 512MB
+  //   );
 
-    if (filteredVideos.length > 0) {
-      AnswerModal.confirm({
-        content: t('video.form_video.fields.file.msg.max_size'),
-      });
-      return false;
-    }
-    return true;
-  };
+  //   if (filteredVideos.length > 0) {
+  //     AnswerModal.confirm({
+  //       content: t('video.form_video.fields.file.msg.max_size'),
+  //     });
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const upload = (
     files: FileList,
@@ -104,7 +104,8 @@ const Video = ({ editorInstance }) => {
   const drop = async (e) => {
     const fileList = e.dataTransfer.files;
 
-    const bool = verifyVideoSize(fileList);
+    // const bool = verifyVideoSize(fileList);
+    const bool = true;
 
     if (!bool) {
       return;
@@ -124,7 +125,7 @@ const Video = ({ editorInstance }) => {
     if (Array.isArray(urls)) {
       urls.forEach(({ name, url }) => {
         if (name && url) {
-          text.push(`[${name}](${url})`);
+          text.push(`![${name}](${url})`);
         }
       });
     }
@@ -139,8 +140,8 @@ const Video = ({ editorInstance }) => {
   const paste = async (event) => {
     const clipboard = event.clipboardData;
 
-    const bool = verifyVideoSize(clipboard.files);
-
+    // const bool = verifyVideoSize(clipboard.files);
+    const bool = true;
     if (bool) {
       event.preventDefault();
       const startPos = editor.getCursor();
@@ -159,18 +160,18 @@ const Video = ({ editorInstance }) => {
     }
   };
 
-  useEffect(() => {
-    editor?.on('dragenter', dragenter);
-    editor?.on('dragover', dragover);
-    editor?.on('drop', drop);
-    editor?.on('paste', paste);
-    return () => {
-      editor?.off('dragenter', dragenter);
-      editor?.off('dragover', dragover);
-      editor?.off('drop', drop);
-      editor?.off('paste', paste);
-    };
-  }, [editor]);
+  // useEffect(() => {
+  //   editor?.on('dragenter', dragenter);
+  //   editor?.on('dragover', dragover);
+  //   editor?.on('drop', drop);
+  //   editor?.on('paste', paste);
+  //   return () => {
+  //     editor?.off('dragenter', dragenter);
+  //     editor?.off('dragover', dragover);
+  //     editor?.off('drop', drop);
+  //     editor?.off('paste', paste);
+  //   };
+  // }, [editor]);
 
   useEffect(() => {
     if (link.value && link.type === 'drop') {
@@ -192,8 +193,8 @@ const Video = ({ editorInstance }) => {
     if (!editor) {
       return;
     }
-    const files = e.target?.files || [];
-    const bool = verifyVideoSize(files);
+    // const files = e.target?.files || [];
+    const bool = true;
 
     if (!bool) {
       return;
