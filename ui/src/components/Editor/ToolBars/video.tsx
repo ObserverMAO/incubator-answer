@@ -3,6 +3,8 @@ import { useEffect, useState, memo } from 'react';
 import { Button, Form, Modal, Tab, Tabs } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
+import ProgressBar from '@ramonak/react-progress-bar';
+
 import { Modal as AnswerModal } from '@/components';
 import ToolItem from '../toolItem';
 import { IEditorContext, Editor } from '../types';
@@ -34,6 +36,11 @@ const Video = ({ editorInstance }) => {
     errorMsg: '',
   });
 
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<
+    'uploading' | 'success' | 'error'
+  >('uploading');
   // const verifyVideoSize = (files: FileList) => {
   //   if (files.length === 0) {
   //     return false;
@@ -64,16 +71,53 @@ const Video = ({ editorInstance }) => {
   const upload = (
     files: FileList,
   ): Promise<{ url: string; name: string }[]> => {
-    const promises = Array.from(files).map(async (file) => {
-      const url = await uploadImage({ file, type: 'post' });
-      return {
-        name: file.name,
-        url,
-      };
+    setIsUploading(true);
+    setUploadProgress(0);
+    setUploadStatus('uploading');
+
+    const promises = Array.from(files).map((file) => {
+      return new Promise<{ url: string; name: string }>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('source', 'post');
+
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) {
+            const percent = Math.round((e.loaded * 100) / e.total);
+            setUploadProgress(percent);
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status === 200) {
+            setUploadStatus('success');
+            setIsUploading(false);
+            resolve({
+              name: file.name,
+              url: xhr.responseText,
+            });
+          } else {
+            setUploadStatus('error');
+            setIsUploading(false);
+            reject(new Error(`Upload failed: ${xhr.statusText}`));
+          }
+        });
+
+        xhr.addEventListener('error', () => {
+          setUploadStatus('error');
+          setIsUploading(false);
+          reject(new Error('Upload failed'));
+        });
+
+        xhr.open('POST', '/answer/api/v1/file');
+        xhr.send(formData);
+      });
     });
 
     return Promise.all(promises);
   };
+
   const handleClick = () => {
     if (!link.value) {
       setLink({ ...link, isInvalid: true });
@@ -235,7 +279,29 @@ const Video = ({ editorInstance }) => {
                     onChange={onUpload}
                     isInvalid={currentTab === 'localVideo' && link.isInvalid}
                   />
-
+                  {isUploading && (
+                    <div className="mt-2">
+                      <ProgressBar
+                        completed={uploadProgress}
+                        customLabel={`${uploadProgress}%`}
+                        bgColor={
+                          uploadStatus === 'error'
+                            ? '#dc3545'
+                            : uploadStatus === 'success'
+                              ? '#28a745'
+                              : '#007bff'
+                        }
+                        height="20px"
+                        width="100%"
+                        labelSize="12px"
+                        baseBgColor="#e9ecef"
+                        labelColor="#ffffff"
+                        transitionDuration="0.3s"
+                        animateOnRender
+                        maxCompleted={100}
+                      />
+                    </div>
+                  )}
                   <Form.Control.Feedback type="invalid">
                     {t('video.form_video.fields.file.msg.empty')}
                   </Form.Control.Feedback>
