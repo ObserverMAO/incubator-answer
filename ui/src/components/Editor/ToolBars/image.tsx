@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -52,32 +53,32 @@ const Image = ({ editorInstance }) => {
     isInvalid: false,
     errorMsg: '',
   });
-  const verifyImageSize = (files: FileList) => {
-    if (files.length === 0) {
-      return false;
-    }
-    const filteredFiles = Array.from(files).filter(
-      (file) => file.type.indexOf('image') === -1,
-    );
+  // const verifyImageSize = (files: FileList) => {
+  //   if (files.length === 0) {
+  //     return false;
+  //   }
+  //   const filteredFiles = Array.from(files).filter(
+  //     (file) => file.type.indexOf('image') === -1,
+  //   );
 
-    if (filteredFiles.length > 0) {
-      AnswerModal.confirm({
-        content: t('image.form_image.fields.file.msg.only_image'),
-      });
-      return false;
-    }
-    const filteredImages = Array.from(files).filter(
-      (file) => file.size / 1024 / 1024 > 4,
-    );
+  //   if (filteredFiles.length > 0) {
+  //     AnswerModal.confirm({
+  //       content: t('image.form_image.fields.file.msg.only_image'),
+  //     });
+  //     return false;
+  //   }
+  //   const filteredImages = Array.from(files).filter(
+  //     (file) => file.size / 1024 / 1024 > 4,
+  //   );
 
-    if (filteredImages.length > 0) {
-      AnswerModal.confirm({
-        content: t('image.form_image.fields.file.msg.max_size'),
-      });
-      return false;
-    }
-    return true;
-  };
+  //   if (filteredImages.length > 0) {
+  //     AnswerModal.confirm({
+  //       content: t('image.form_image.fields.file.msg.max_size'),
+  //     });
+  //     return false;
+  //   }
+  //   return true;
+  // };
   const upload = (
     files: FileList,
   ): Promise<{ url: string; name: string }[]> => {
@@ -104,7 +105,8 @@ const Image = ({ editorInstance }) => {
   const drop = async (e) => {
     const fileList = e.dataTransfer.files;
 
-    const bool = verifyImageSize(fileList);
+    // const bool = verifyImageSize(fileList);
+    const bool = true;
 
     if (!bool) {
       return;
@@ -140,7 +142,8 @@ const Image = ({ editorInstance }) => {
   const paste = async (event) => {
     const clipboard = event.clipboardData;
 
-    const bool = verifyImageSize(clipboard.files);
+    // const bool = verifyImageSize(clipboard.files);
+    const bool = true;
 
     if (bool) {
       event.preventDefault();
@@ -243,8 +246,9 @@ const Image = ({ editorInstance }) => {
     if (!editor) {
       return;
     }
-    const files = e.target?.files || [];
-    const bool = verifyImageSize(files);
+    // const files = e.target?.files || [];
+    // const bool = verifyImageSize(files);
+    const bool = true;
 
     if (!bool) {
       return;

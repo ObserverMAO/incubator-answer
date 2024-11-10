@@ -46,7 +46,7 @@ require (
 	github.com/jinzhu/copier v0.3.5
 	github.com/jinzhu/now v1.1.5
 	github.com/lib/pq v1.10.7
-	github.com/lixvyang/goldmark-enclave v0.0.7
+	github.com/lixvyang/goldmark-enclave v0.0.8
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/robfig/cron/v3 v3.0.1
