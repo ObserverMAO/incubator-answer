@@ -85,8 +85,7 @@ const Video = ({ editorInstance }) => {
               const percent = Math.round(
                 (progressEvent.loaded * 100) / progressEvent.total,
               );
-              console.log(`Upload Progress: ${percent}%`);
-
+              console.log('Upload Progress: ', percent);
               setUploadProgress(percent);
             }
           },
@@ -293,7 +292,6 @@ const Video = ({ editorInstance }) => {
                     onChange={onUpload}
                     isInvalid={currentTab === 'localVideo' && link.isInvalid}
                   />
-
                   {isUploading && (
                     <div className="mt-2">
                       <ProgressBar
