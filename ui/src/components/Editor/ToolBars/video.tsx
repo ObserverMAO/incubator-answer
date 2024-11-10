@@ -77,41 +77,32 @@ const Video = ({ editorInstance }) => {
 
     const promises = Array.from(files).map((file) => {
       return new Promise<{ url: string; name: string }>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('source', 'post');
-
-        xhr.upload.addEventListener('progress', (e) => {
-          if (e.lengthComputable) {
-            const percent = Math.round((e.loaded * 100) / e.total);
-            setUploadProgress(percent);
-          }
-        });
-
-        xhr.addEventListener('load', () => {
-          if (xhr.status === 200) {
+        uploadImage({
+          file,
+          type: 'post',
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.lengthComputable) {
+              const percent = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total,
+              );
+              console.log('Upload Progress: ', percent);
+              setUploadProgress(percent);
+            }
+          },
+        })
+          .then((url) => {
             setUploadStatus('success');
             setIsUploading(false);
             resolve({
               name: file.name,
-              url: xhr.responseText,
+              url,
             });
-          } else {
+          })
+          .catch((error) => {
             setUploadStatus('error');
             setIsUploading(false);
-            reject(new Error(`Upload failed: ${xhr.statusText}`));
-          }
-        });
-
-        xhr.addEventListener('error', () => {
-          setUploadStatus('error');
-          setIsUploading(false);
-          reject(new Error('Upload failed'));
-        });
-
-        xhr.open('POST', '/answer/api/v1/file');
-        xhr.send(formData);
+            reject(new Error(`Upload failed: ${error.message}`));
+          });
       });
     });
 
@@ -232,7 +223,6 @@ const Video = ({ editorInstance }) => {
 
     setVisible(true);
   };
-
   const onUpload = async (e) => {
     if (!editor) {
       return;
@@ -244,9 +234,32 @@ const Video = ({ editorInstance }) => {
       return;
     }
 
-    uploadImage({ file: e.target.files[0], type: 'post' }).then((url) => {
-      setLink({ ...link, value: url });
-    });
+    setIsUploading(true);
+    setUploadProgress(0);
+    setUploadStatus('uploading');
+
+    uploadImage({
+      file: e.target.files[0],
+      type: 'post',
+      onUploadProgress: (progressEvent) => {
+        if (progressEvent.lengthComputable) {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          setUploadProgress(percent);
+        }
+      },
+    })
+      .then((url) => {
+        setUploadStatus('success');
+        setIsUploading(false);
+        setLink({ ...link, value: url });
+      })
+      .catch((error) => {
+        setUploadStatus('error');
+        setIsUploading(false);
+        console.error(`Upload failed: ${error.message}`);
+      });
   };
 
   const onHide = () => setVisible(false);
