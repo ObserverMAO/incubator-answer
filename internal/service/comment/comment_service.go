@@ -21,10 +21,13 @@ package comment
 
 import (
 	"context"
-	"github.com/apache/incubator-answer/internal/service/event_queue"
+	"encoding/json"
 	"time"
 
+	"github.com/apache/incubator-answer/internal/service/event_queue"
+
 	"github.com/apache/incubator-answer/internal/base/constant"
+	"github.com/apache/incubator-answer/internal/base/data"
 	"github.com/apache/incubator-answer/internal/base/pager"
 	"github.com/apache/incubator-answer/internal/base/reason"
 	"github.com/apache/incubator-answer/internal/entity"
@@ -88,6 +91,7 @@ type CommentService struct {
 	externalNotificationQueueService notice_queue.ExternalNotificationQueueService
 	activityQueueService             activity_queue.ActivityQueueService
 	eventQueueService                event_queue.EventQueueService
+	data                             *data.Data
 }
 
 // NewCommentService new comment service
@@ -103,6 +107,7 @@ func NewCommentService(
 	externalNotificationQueueService notice_queue.ExternalNotificationQueueService,
 	activityQueueService activity_queue.ActivityQueueService,
 	eventQueueService event_queue.EventQueueService,
+	data *data.Data,
 ) *CommentService {
 	return &CommentService{
 		commentRepo:                      commentRepo,
@@ -116,7 +121,28 @@ func NewCommentService(
 		externalNotificationQueueService: externalNotificationQueueService,
 		activityQueueService:             activityQueueService,
 		eventQueueService:                eventQueueService,
+		data:                             data,
 	}
+}
+
+// get all external login info
+func (cs *CommentService) GetAllExternalLoginInfo(ctx context.Context) (externalLoginInfoMap map[string]*entity.MixinUserInfo) {
+	var externalLoginInfos []*entity.UserExternalLogin
+	err := cs.data.DB.Table("user_external_login").Find(&externalLoginInfos)
+	if err != nil {
+		log.Debugf("get external login info failed: %v", err)
+	}
+	externalLoginInfoMap = make(map[string]*entity.MixinUserInfo, len(externalLoginInfos))
+	var mixinUserInfoResponse entity.MixinUserInfoResponse
+	for _, info := range externalLoginInfos {
+		err := json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
+		if err != nil {
+			log.Debugf("unmarshal external login info failed: %v", err)
+		}
+		externalLoginInfoMap[info.UserID] = &mixinUserInfoResponse.Data
+	}
+
+	return externalLoginInfoMap
 }
 
 // AddComment add comment
@@ -363,9 +389,10 @@ func (cs *CommentService) GetCommentWithPage(ctx context.Context, req *schema.Ge
 	if err != nil {
 		return nil, err
 	}
+	externalLoginInfoMap := cs.GetAllExternalLoginInfo(ctx)
 	resp := make([]*schema.GetCommentResp, 0)
 	for _, comment := range commentList {
-		commentResp, err := cs.convertCommentEntity2Resp(ctx, req, comment)
+		commentResp, err := cs.convertCommentEntity2Resp(ctx, req, comment, externalLoginInfoMap)
 		if err != nil {
 			return nil, err
 		}
@@ -387,7 +414,7 @@ func (cs *CommentService) GetCommentWithPage(ctx context.Context, req *schema.Ge
 				return nil, err
 			}
 			if exist && comment.ObjectID == req.ObjectID {
-				commentResp, err := cs.convertCommentEntity2Resp(ctx, req, comment)
+				commentResp, err := cs.convertCommentEntity2Resp(ctx, req, comment, externalLoginInfoMap)
 				if err != nil {
 					return nil, err
 				}
@@ -399,7 +426,7 @@ func (cs *CommentService) GetCommentWithPage(ctx context.Context, req *schema.Ge
 }
 
 func (cs *CommentService) convertCommentEntity2Resp(ctx context.Context, req *schema.GetCommentWithPageReq,
-	comment *entity.Comment) (commentResp *schema.GetCommentResp, err error) {
+	comment *entity.Comment, externalLoginInfoMap map[string]*entity.MixinUserInfo) (commentResp *schema.GetCommentResp, err error) {
 	commentResp = &schema.GetCommentResp{
 		CommentID:      comment.ID,
 		CreatedAt:      comment.CreatedAt.Unix(),
@@ -423,6 +450,9 @@ func (cs *CommentService) convertCommentEntity2Resp(ctx context.Context, req *sc
 			commentResp.UserDisplayName = commentUser.DisplayName
 			commentResp.UserAvatar = commentUser.Avatar
 			commentResp.UserStatus = commentUser.Status
+			if externalLoginInfo, exist := externalLoginInfoMap[commentResp.UserID]; exist {
+				commentResp.UserMemberShip = externalLoginInfo.Membership
+			}
 		}
 	}
 
@@ -436,6 +466,9 @@ func (cs *CommentService) convertCommentEntity2Resp(ctx context.Context, req *sc
 			commentResp.ReplyUsername = replyUser.Username
 			commentResp.ReplyUserDisplayName = replyUser.DisplayName
 			commentResp.ReplyUserStatus = replyUser.Status
+			if externalLoginInfo, exist := externalLoginInfoMap[commentResp.ReplyUserID]; exist {
+				commentResp.ReplyUserMemberShip = externalLoginInfo.Membership
+			}
 		}
 	}
 

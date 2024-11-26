@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,6 +29,7 @@ import { Avatar, Icon, SvgIcon } from '@/components';
 import type { UserInfoRes } from '@/common/interface';
 import { getUcBranding, UcBrandingEntry } from '@/services';
 import { userCenterStore } from '@/stores';
+import MemberShip from '@/components/MemberShip';
 
 interface Props {
   data: UserInfoRes;
@@ -96,7 +98,16 @@ const Index: FC<Props> = ({ data }) => {
             </div>
           )}
         </div>
-        <div className="text-secondary mb-4">@{data.username}</div>
+        <div className="text-secondary mb-4">
+          @{data.username}
+          {data.member_ship?.plan && (
+            <MemberShip
+              membership={data.member_ship?.plan}
+              size="16"
+              className="ms-1"
+            />
+          )}
+        </div>
 
         <div className="d-flex flex-wrap mb-3">
           <div className="me-3">

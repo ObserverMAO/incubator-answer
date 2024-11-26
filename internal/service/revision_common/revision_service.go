@@ -22,6 +22,7 @@ package revision_common
 import (
 	"context"
 
+	"github.com/apache/incubator-answer/internal/base/data"
 	"github.com/apache/incubator-answer/internal/base/reason"
 	"github.com/apache/incubator-answer/internal/service/revision"
 	usercommon "github.com/apache/incubator-answer/internal/service/user_common"
@@ -38,14 +39,17 @@ import (
 type RevisionService struct {
 	revisionRepo revision.RevisionRepo
 	userRepo     usercommon.UserRepo
+	data         *data.Data
 }
 
 func NewRevisionService(revisionRepo revision.RevisionRepo,
 	userRepo usercommon.UserRepo,
+	data *data.Data,
 ) *RevisionService {
 	return &RevisionService{
 		revisionRepo: revisionRepo,
 		userRepo:     userRepo,
+		data:         data,
 	}
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +23,7 @@ import { Link } from 'react-router-dom';
 
 import { Avatar } from '@/components';
 import { formatCount } from '@/utils';
+import MemberShip from '../MemberShip';
 
 interface Props {
   data: any;
@@ -64,17 +66,25 @@ const Index: FC<Props> = ({
             style={{ maxWidth: nameMaxWidth }}>
             {data?.display_name}
           </span>
+          {data?.membership && (
+            <MemberShip membership={data?.membership?.plan} size="14" />
+          )}
         </Link>
       ) : (
         <>
           {showAvatar && (
-            <Avatar
-              avatar={data?.avatar}
-              size={avatarSize}
-              className={`me-1 ${avatarClass}`}
-              searchStr={avatarSearchStr}
-              alt={data?.display_name}
-            />
+            <>
+              <Avatar
+                avatar={data?.avatar}
+                size={avatarSize}
+                className={`me-1 ${avatarClass}`}
+                searchStr={avatarSearchStr}
+                alt={data?.display_name}
+              />
+              {data?.membership && (
+                <MemberShip membership={data?.membership?.plan} size="14" />
+              )}
+            </>
           )}
           <span className="me-1 name-ellipsis">{data?.display_name}</span>
         </>

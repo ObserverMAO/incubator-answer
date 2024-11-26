@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +25,7 @@ import classnames from 'classnames';
 
 import { Avatar, FormatTime } from '@/components';
 import { formatCount } from '@/utils';
+import MemberShip from '../MemberShip';
 
 interface Props {
   data: any;
@@ -32,6 +34,7 @@ interface Props {
   isLogged: boolean;
   timelinePath: string;
   className?: string;
+  membership?: any;
 }
 
 const Index: FC<Props> = ({
@@ -41,6 +44,7 @@ const Index: FC<Props> = ({
   isLogged,
   timelinePath,
   className = '',
+  membership,
 }) => {
   return (
     <div className={classnames('d-flex', className)}>
@@ -84,14 +88,24 @@ const Index: FC<Props> = ({
       <div className="small text-secondary d-flex flex-row flex-md-column align-items-center align-items-md-start">
         <div className="me-1 me-md-0 d-flex align-items-center">
           {data?.status !== 'deleted' ? (
-            <Link
-              to={`/users/${data?.username}`}
-              className="me-1 text-break name-ellipsis"
-              style={{ maxWidth: '100px' }}>
-              {data?.display_name}
-            </Link>
+            <>
+              <Link
+                to={`/users/${data?.username}`}
+                className="me-1 text-break name-ellipsis"
+                style={{ maxWidth: '100px' }}>
+                {data?.display_name}
+              </Link>
+              {membership && (
+                <MemberShip membership={membership.plan} size="14" />
+              )}
+            </>
           ) : (
-            <span className="me-1 text-break">{data?.display_name}</span>
+            <>
+              <span className="me-1 text-break">{data?.display_name}</span>
+              {membership && (
+                <MemberShip membership={membership.plan} size="14" />
+              )}
+            </>
           )}
           <span className="fw-bold" title="Reputation">
             {formatCount(data?.rank)}

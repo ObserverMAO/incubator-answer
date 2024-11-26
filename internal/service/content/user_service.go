@@ -23,8 +23,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/apache/incubator-answer/internal/service/event_queue"
 	"time"
+
+	"github.com/apache/incubator-answer/internal/service/event_queue"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
 	questioncommon "github.com/apache/incubator-answer/internal/service/question_common"
@@ -139,6 +140,22 @@ func (us *UserService) GetOtherUserInfoByUsername(ctx context.Context, req *sche
 	resp.ConvertFromUserEntity(userInfo)
 	resp.Avatar = us.siteInfoService.FormatAvatar(ctx, userInfo.Avatar, userInfo.EMail, userInfo.Status).GetURL()
 
+	externalLoginInfoList, err := us.userExternalLoginService.GetExternalLoginUserInfoList(ctx, userInfo.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, info := range externalLoginInfoList {
+		if info.Provider == "basic" {
+			var mixinUserInfoResponse entity.MixinUserInfoResponse
+			err = json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
+			if err != nil {
+				return nil, err
+			}
+			resp.MemberShip = mixinUserInfoResponse.Data.Membership
+			break
+		}
+	}
 	// Only the user himself and the administrator can see the hidden questions
 	questionCount, err := us.questionService.GetPersonalUserQuestionCount(ctx, req.UserID, userInfo.ID, req.IsAdmin)
 	if err != nil {
@@ -748,7 +765,7 @@ func (us *UserService) UserRanking(ctx context.Context) (resp *schema.UserRankin
 	if err != nil {
 		return nil, err
 	}
-	return us.warpStatRankingResp(userInfoMapping, rankStat, voteStat, userRoleRels), nil
+	return us.warpStatRankingResp(ctx, userInfoMapping, rankStat, voteStat, userRoleRels), nil
 }
 
 // GetUserStaff get user staff
@@ -903,6 +920,7 @@ func (us *UserService) SearchUserListByName(ctx context.Context, req *schema.Get
 }
 
 func (us *UserService) warpStatRankingResp(
+	ctx context.Context,
 	userInfoMapping map[string]*entity.User,
 	rankStat []*entity.ActivityUserRankStat,
 	voteStat []*entity.ActivityUserVoteStat,
@@ -912,16 +930,36 @@ func (us *UserService) warpStatRankingResp(
 		UsersWithTheMostVote:       make([]*schema.UserRankingSimpleInfo, 0),
 		Staffs:                     make([]*schema.UserRankingSimpleInfo, 0),
 	}
+
+	allExternalLoginInfo, err := us.userExternalLoginService.ListAllExternalLoginInfo(ctx)
+	if err != nil {
+		log.Debugf("get all external login info failed: %v", err)
+	}
+	allExternalLoginInfoMap := make(map[string]*entity.MixinUserInfo, len(allExternalLoginInfo))
+	var mixinUserInfoResponse entity.MixinUserInfoResponse
+	for _, info := range allExternalLoginInfo {
+		err := json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
+		if err != nil {
+			log.Debugf("unmarshal external login info failed: %v", err)
+		}
+		allExternalLoginInfoMap[info.UserID] = &mixinUserInfoResponse.Data
+	}
+
 	for _, stat := range rankStat {
 		if stat.Rank <= 0 {
 			continue
 		}
 		if userInfo := userInfoMapping[stat.UserID]; userInfo != nil && userInfo.Status != entity.UserStatusDeleted {
+			membership := entity.Membership{}
+			if mixinUserInfo, ok := allExternalLoginInfoMap[stat.UserID]; ok {
+				membership = mixinUserInfo.Membership
+			}
 			resp.UsersWithTheMostReputation = append(resp.UsersWithTheMostReputation, &schema.UserRankingSimpleInfo{
 				Username:    userInfo.Username,
 				Rank:        stat.Rank,
 				DisplayName: userInfo.DisplayName,
 				Avatar:      userInfo.Avatar,
+				Membership:  membership,
 			})
 		}
 	}
@@ -930,21 +968,31 @@ func (us *UserService) warpStatRankingResp(
 			continue
 		}
 		if userInfo := userInfoMapping[stat.UserID]; userInfo != nil && userInfo.Status != entity.UserStatusDeleted {
+			membership := entity.Membership{}
+			if mixinUserInfo, ok := allExternalLoginInfoMap[stat.UserID]; ok {
+				membership = mixinUserInfo.Membership
+			}
 			resp.UsersWithTheMostVote = append(resp.UsersWithTheMostVote, &schema.UserRankingSimpleInfo{
 				Username:    userInfo.Username,
 				VoteCount:   stat.VoteCount,
 				DisplayName: userInfo.DisplayName,
 				Avatar:      userInfo.Avatar,
+				Membership:  membership,
 			})
 		}
 	}
 	for _, rel := range userRoleRels {
 		if userInfo := userInfoMapping[rel.UserID]; userInfo != nil && userInfo.Status != entity.UserStatusDeleted {
+			membership := entity.Membership{}
+			if mixinUserInfo, ok := allExternalLoginInfoMap[rel.UserID]; ok {
+				membership = mixinUserInfo.Membership
+			}
 			resp.Staffs = append(resp.Staffs, &schema.UserRankingSimpleInfo{
 				Username:    userInfo.Username,
 				Rank:        userInfo.Rank,
 				DisplayName: userInfo.DisplayName,
 				Avatar:      userInfo.Avatar,
+				Membership:  membership,
 			})
 		}
 	}

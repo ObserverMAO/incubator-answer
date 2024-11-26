@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,8 +26,15 @@ import classNames from 'classnames';
 
 import { TextArea, Mentions } from '@/components';
 import { usePageUsers, usePromptWithUnload } from '@/hooks';
+import MemberShip from '@/components/MemberShip';
 
-const Index = ({ userName, onSendReply, onCancel, mode }) => {
+const Index = ({
+  userName,
+  onSendReply,
+  onCancel,
+  mode,
+  replyUserMemberShip,
+}) => {
   const [value, setValue] = useState('');
   const pageUsers = usePageUsers();
   const { t } = useTranslation('translation', { keyPrefix: 'comment' });
@@ -54,6 +62,9 @@ const Index = ({ userName, onSendReply, onCancel, mode }) => {
     <div className="mb-2">
       <div className="small mb-2">
         {t('reply_to')} {userName}
+        {replyUserMemberShip && (
+          <MemberShip membership={replyUserMemberShip?.plan} size="14" />
+        )}
       </div>
       <div className="d-flex mb-1 align-items-start flex-column flex-md-row">
         <div className="w-100">

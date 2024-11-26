@@ -23,6 +23,7 @@ import (
 	"context"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
+	"github.com/apache/incubator-answer/internal/base/data"
 	"github.com/apache/incubator-answer/internal/entity"
 	"github.com/apache/incubator-answer/internal/schema"
 	usercommon "github.com/apache/incubator-answer/internal/service/user_common"
@@ -42,15 +43,18 @@ type UserNotificationConfigRepo interface {
 type UserNotificationConfigService struct {
 	userRepo                   usercommon.UserRepo
 	userNotificationConfigRepo UserNotificationConfigRepo
+	data                       *data.Data
 }
 
 func NewUserNotificationConfigService(
 	userRepo usercommon.UserRepo,
 	userNotificationConfigRepo UserNotificationConfigRepo,
+	data *data.Data,
 ) *UserNotificationConfigService {
 	return &UserNotificationConfigService{
 		userRepo:                   userRepo,
 		userNotificationConfigRepo: userNotificationConfigRepo,
+		data:                       data,
 	}
 }
 

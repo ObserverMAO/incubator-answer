@@ -125,6 +125,24 @@ func NewQuestionCommon(questionRepo QuestionRepo,
 	}
 }
 
+func (qs *QuestionCommon) GetAllExternalLoginInfo(ctx context.Context) (externalLoginInfoMap map[string]*entity.MixinUserInfo) {
+	var externalLoginInfos []*entity.UserExternalLogin
+	err := qs.data.DB.Table("user_external_login").Find(&externalLoginInfos)
+	if err != nil {
+		log.Debugf("get external login info failed: %v", err)
+	}
+	externalLoginInfoMap = make(map[string]*entity.MixinUserInfo, len(externalLoginInfos))
+	for _, info := range externalLoginInfos {
+		var mixinUserInfoResponse entity.MixinUserInfoResponse
+		err := json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
+		if err != nil {
+			log.Debugf("unmarshal external login info failed: %v", err)
+		}
+		externalLoginInfoMap[info.UserID] = &mixinUserInfoResponse.Data
+	}
+	return externalLoginInfoMap
+}
+
 func (qs *QuestionCommon) GetUserQuestionCount(ctx context.Context, userID string) (count int64, err error) {
 	return qs.questionRepo.GetUserQuestionCount(ctx, userID, 0)
 }
@@ -318,6 +336,17 @@ func (qs *QuestionCommon) Info(ctx context.Context, questionID string, loginUser
 	resp.UserInfo = userInfoMap[questionInfo.UserID]
 	resp.UpdateUserInfo = userInfoMap[questionInfo.LastEditUserID]
 	resp.LastAnsweredUserInfo = userInfoMap[resp.LastAnsweredUserID]
+
+	externalLoginInfoMap := qs.GetAllExternalLoginInfo(ctx)
+	if mixinUserInfo, ok := externalLoginInfoMap[resp.UserID]; ok {
+		resp.UserInfo.Membership = mixinUserInfo.Membership
+	}
+	if mixinUserInfo, ok := externalLoginInfoMap[resp.LastEditUserID]; ok {
+		resp.UpdateUserInfo.Membership = mixinUserInfo.Membership
+	}
+	if mixinUserInfo, ok := externalLoginInfoMap[resp.LastAnsweredUserID]; ok {
+		resp.LastAnsweredUserInfo.Membership = mixinUserInfo.Membership
+	}
 	if len(loginUserID) == 0 {
 		return resp, nil
 	}
@@ -350,6 +379,20 @@ func (qs *QuestionCommon) FormatQuestionsPage(
 	formattedQuestions = make([]*schema.QuestionPageResp, 0)
 	questionIDs := make([]string, 0)
 	userIDs := make([]string, 0)
+	var externalLoginInfos []*entity.UserExternalLogin
+	err = qs.data.DB.Table("user_external_login").Find(&externalLoginInfos)
+	if err != nil {
+		log.Debugf("get external login info failed: %v", err)
+	}
+	externalLoginInfoMap := make(map[string]*entity.MixinUserInfo, len(externalLoginInfos))
+	var mixinUserInfoResponse entity.MixinUserInfoResponse
+	for _, info := range externalLoginInfos {
+		err := json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
+		if err != nil {
+			log.Debugf("unmarshal external login info failed: %v", err)
+		}
+		externalLoginInfoMap[info.UserID] = &mixinUserInfoResponse.Data
+	}
 
 	for _, questionInfo := range questionList {
 		t := &schema.QuestionPageResp{
@@ -397,20 +440,32 @@ func (qs *QuestionCommon) FormatQuestionsPage(
 		if orderCond == schema.QuestionOrderCondNewest || (!haveEdited && !haveAnswered) {
 			t.OperationType = schema.QuestionPageRespOperationTypeAsked
 			t.OperatedAt = questionInfo.CreatedAt.Unix()
-			t.Operator = &schema.QuestionPageRespOperator{ID: questionInfo.UserID}
+			membership := entity.Membership{}
+			if mixinUserInfo, ok := externalLoginInfoMap[questionInfo.UserID]; ok {
+				membership = mixinUserInfo.Membership
+			}
+			t.Operator = &schema.QuestionPageRespOperator{ID: questionInfo.UserID, Membership: membership}
 		} else {
 			// if no one
 			if haveEdited {
 				t.OperationType = schema.QuestionPageRespOperationTypeModified
 				t.OperatedAt = questionInfo.UpdatedAt.Unix()
-				t.Operator = &schema.QuestionPageRespOperator{ID: questionInfo.LastEditUserID}
+				membership := entity.Membership{}
+				if mixinUserInfo, ok := externalLoginInfoMap[questionInfo.LastEditUserID]; ok {
+					membership = mixinUserInfo.Membership
+				}
+				t.Operator = &schema.QuestionPageRespOperator{ID: questionInfo.LastEditUserID, Membership: membership}
 			}
 
 			if haveAnswered {
 				if t.LastAnsweredAt.Unix() > t.OperatedAt {
 					t.OperationType = schema.QuestionPageRespOperationTypeAnswered
 					t.OperatedAt = t.LastAnsweredAt.Unix()
-					t.Operator = &schema.QuestionPageRespOperator{ID: t.LastAnsweredUserID}
+					membership := entity.Membership{}
+					if mixinUserInfo, ok := externalLoginInfoMap[t.LastAnsweredUserID]; ok {
+						membership = mixinUserInfo.Membership
+					}
+					t.Operator = &schema.QuestionPageRespOperator{ID: t.LastAnsweredUserID, Membership: membership}
 				}
 			}
 		}

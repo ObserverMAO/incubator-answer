@@ -97,14 +97,12 @@ const Personal: FC = () => {
             )}
           </div>
           <NavBar tabName={tabName} slug={username} isSelf={isSelf} />
-
           <Overview
             visible={tabName === 'overview'}
             introduction={userInfo?.bio_html || ''}
             data={topData}
             username={username}
           />
-
           <ListHead
             count={tabName === 'reputation' ? Number(userInfo?.rank) : count}
             sort={order}
@@ -126,7 +124,6 @@ const Personal: FC = () => {
             username={username}
           />
           {!list?.length && !isLoading && <Empty />}
-
           {count > 0 && (
             <div className="d-flex justify-content-center py-4">
               <Pagination
@@ -136,7 +133,6 @@ const Personal: FC = () => {
               />
             </div>
           )}
-
           {tabName === 'overview' && (
             <>
               <h5 className="mb-3">{t('stats')}</h5>

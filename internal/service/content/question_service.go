@@ -28,6 +28,7 @@ import (
 	"github.com/apache/incubator-answer/internal/service/event_queue"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
+	"github.com/apache/incubator-answer/internal/base/data"
 	"github.com/apache/incubator-answer/internal/base/handler"
 	"github.com/apache/incubator-answer/internal/base/pager"
 	"github.com/apache/incubator-answer/internal/base/reason"
@@ -91,6 +92,7 @@ type QuestionService struct {
 	reviewService                    *review.ReviewService
 	configService                    *config.ConfigService
 	eventQueueService                event_queue.EventQueueService
+	data                             *data.Data
 }
 
 func NewQuestionService(
@@ -116,6 +118,7 @@ func NewQuestionService(
 	reviewService *review.ReviewService,
 	configService *config.ConfigService,
 	eventQueueService event_queue.EventQueueService,
+	data *data.Data,
 ) *QuestionService {
 	return &QuestionService{
 		activityRepo:                     activityRepo,
@@ -140,7 +143,27 @@ func NewQuestionService(
 		reviewService:                    reviewService,
 		configService:                    configService,
 		eventQueueService:                eventQueueService,
+		data:                             data,
 	}
+}
+
+func (qs *QuestionService) GetAllExternalLoginInfo(ctx context.Context) (externalLoginInfoMap map[string]*entity.MixinUserInfo) {
+	var externalLoginInfos []*entity.UserExternalLogin
+	err := qs.data.DB.Table("user_external_login").Find(&externalLoginInfos)
+	if err != nil {
+		log.Debugf("get external login info failed: %v", err)
+	}
+	externalLoginInfoMap = make(map[string]*entity.MixinUserInfo, len(externalLoginInfos))
+	var mixinUserInfoResponse entity.MixinUserInfoResponse
+	for _, info := range externalLoginInfos {
+		err := json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
+		if err != nil {
+			log.Debugf("unmarshal external login info failed: %v", err)
+		}
+		externalLoginInfoMap[info.UserID] = &mixinUserInfoResponse.Data
+	}
+
+	return externalLoginInfoMap
 }
 
 func (qs *QuestionService) CloseQuestion(ctx context.Context, req *schema.CloseQuestionReq) error {

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +26,7 @@ import { Fragment } from 'react';
 import { usePageTags } from '@/hooks';
 import { useQueryContributeUsers } from '@/services';
 import { Avatar } from '@/components';
+import MemberShip from '@/components/MemberShip';
 
 const Users = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'users' });
@@ -82,7 +84,14 @@ const Users = () => {
                           className="text-break"
                           to={`/users/${user.username}`}>
                           {user.display_name}
-                        </Link>
+                        </Link>{' '}
+                        {user.membership?.plan && (
+                          <MemberShip
+                            membership={user.membership?.plan}
+                            size="16"
+                            className="me-1"
+                          />
+                        )}
                         <div className="text-secondary small">
                           {key === 'users_with_the_most_vote'
                             ? `${user.vote_count} ${t('votes')}`

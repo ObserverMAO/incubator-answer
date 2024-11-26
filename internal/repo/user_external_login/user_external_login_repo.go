@@ -126,3 +126,12 @@ func (ur *userExternalLoginRepo) GetCacheUserExternalLoginInfo(
 	_ = json.Unmarshal([]byte(res), &info)
 	return info, nil
 }
+
+func (ur *userExternalLoginRepo) ListAllExternalLoginInfo(ctx context.Context) (resp []*entity.UserExternalLogin, err error) {
+	resp = make([]*entity.UserExternalLogin, 0)
+	err = ur.data.DB.Context(ctx).Find(&resp)
+	if err != nil {
+		err = errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	return
+}
