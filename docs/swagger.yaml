@@ -26,6 +26,13 @@ definitions:
     - BadgeLevelBronze
     - BadgeLevelSilver
     - BadgeLevelGold
+  entity.Membership:
+    properties:
+      expired_at:
+        type: string
+      plan:
+        type: string
+    type: object
   handler.RespBody:
     properties:
       code:
@@ -689,6 +696,10 @@ definitions:
       reply_user_id:
         description: reply user id
         type: string
+      reply_user_member_ship:
+        allOf:
+        - $ref: '#/definitions/entity.Membership'
+        description: reply user membership
       reply_user_status:
         description: reply user status
         type: string
@@ -704,6 +715,10 @@ definitions:
       user_id:
         description: user id
         type: string
+      user_member_ship:
+        allOf:
+        - $ref: '#/definitions/entity.Membership'
+        description: user membership
       user_status:
         description: user status
         type: string
@@ -857,6 +872,8 @@ definitions:
       location:
         description: location
         type: string
+      member_ship:
+        $ref: '#/definitions/entity.Membership'
       mobile:
         description: mobile
         type: string
@@ -1609,6 +1626,8 @@ definitions:
         type: string
       id:
         type: string
+      membership:
+        $ref: '#/definitions/entity.Membership'
       rank:
         type: integer
       status:
@@ -2623,6 +2642,8 @@ definitions:
         type: string
       location:
         type: string
+      membership:
+        $ref: '#/definitions/entity.Membership'
       rank:
         type: integer
       status:
@@ -2794,6 +2815,10 @@ definitions:
       display_name:
         description: display name
         type: string
+      membership:
+        allOf:
+        - $ref: '#/definitions/entity.Membership'
+        description: membership
       rank:
         description: rank
         type: integer

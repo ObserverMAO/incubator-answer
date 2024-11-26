@@ -46,6 +46,7 @@ import (
 )
 
 type UserExternalLoginRepo interface {
+	ListAllExternalLoginInfo(ctx context.Context) (resp []*entity.UserExternalLogin, err error)
 	AddUserExternalLogin(ctx context.Context, user *entity.UserExternalLogin) (err error)
 	UpdateInfo(ctx context.Context, userInfo *entity.UserExternalLogin) (err error)
 	GetByExternalID(ctx context.Context, provider, externalID string) (userInfo *entity.UserExternalLogin, exist bool, err error)
@@ -88,6 +89,11 @@ func NewUserExternalLoginService(
 	}
 }
 
+// Get all ExternalLogin info
+func (us *UserExternalLoginService) ListAllExternalLoginInfo(ctx context.Context) (resp []*entity.UserExternalLogin, err error) {
+	return us.userExternalLoginRepo.ListAllExternalLoginInfo(ctx)
+}
+
 // ExternalLogin if user is already a member logged in
 func (us *UserExternalLoginService) ExternalLogin(
 	ctx context.Context, externalUserInfo *schema.ExternalLoginUserInfoCache) (
@@ -105,6 +111,15 @@ func (us *UserExternalLoginService) ExternalLogin(
 		return nil, err
 	}
 	if exist {
+		if oldExternalLoginUserInfo != nil {
+			oldExternalLoginUserInfo.MetaInfo = externalUserInfo.MetaInfo
+			oldExternalLoginUserInfo.UpdatedAt = time.Now()
+			err = us.userExternalLoginRepo.UpdateInfo(ctx, oldExternalLoginUserInfo)
+			if err != nil {
+				return nil, err
+			}
+		}
+
 		// if user is already a member, login directly
 		oldUserInfo, exist, err := us.userRepo.GetByUserID(ctx, oldExternalLoginUserInfo.UserID)
 		if err != nil {

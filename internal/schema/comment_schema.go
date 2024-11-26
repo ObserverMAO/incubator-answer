@@ -180,6 +180,8 @@ type GetCommentResp struct {
 	UserAvatar string `json:"user_avatar"`
 	// user status
 	UserStatus string `json:"user_status"`
+	// user membership
+	UserMemberShip entity.Membership `json:"user_member_ship"`
 
 	// reply user id
 	ReplyUserID string `json:"reply_user_id"`
@@ -191,6 +193,8 @@ type GetCommentResp struct {
 	ReplyCommentID string `json:"reply_comment_id"`
 	// reply user status
 	ReplyUserStatus string `json:"reply_user_status"`
+	// reply user membership
+	ReplyUserMemberShip entity.Membership `json:"reply_user_member_ship"`
 
 	// MemberActions
 	MemberActions []*PermissionMemberAction `json:"member_actions"`

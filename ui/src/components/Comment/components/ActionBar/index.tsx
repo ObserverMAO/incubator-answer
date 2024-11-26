@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/jsx-curly-brace-presence */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +27,7 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Icon, FormatTime } from '@/components';
+import MemberShip from '@/components/MemberShip';
 
 const ActionBar = ({
   nickName,
@@ -37,6 +40,7 @@ const ActionBar = ({
   onVote,
   onAction,
   userStatus = '',
+  userMemberShip,
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'comment' });
 
@@ -44,12 +48,19 @@ const ActionBar = ({
     <div className="d-flex justify-content-between flex-wrap small">
       <div className="d-flex align-items-center flex-wrap link-secondary">
         {userStatus !== 'deleted' ? (
-          <Link
-            to={`/users/${username}`}
-            className="name-ellipsis"
-            style={{ maxWidth: '200px' }}>
-            {nickName}
-          </Link>
+          <>
+            <Link
+              to={`/users/${username}`}
+              className="name-ellipsis"
+              style={{ maxWidth: '200px' }}>
+              {nickName}
+            </Link>{' '}
+            <MemberShip
+              membership={userMemberShip?.plan}
+              size="14"
+              className="ms-1"
+            />
+          </>
         ) : (
           <span>{nickName}</span>
         )}

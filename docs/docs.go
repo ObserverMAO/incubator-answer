@@ -7366,6 +7366,17 @@ const docTemplate = `{
                 "BadgeLevelGold"
             ]
         },
+        "entity.Membership": {
+            "type": "object",
+            "properties": {
+                "expired_at": {
+                    "type": "string"
+                },
+                "plan": {
+                    "type": "string"
+                }
+            }
+        },
         "handler.RespBody": {
             "type": "object",
             "properties": {
@@ -8322,6 +8333,14 @@ const docTemplate = `{
                     "description": "reply user id",
                     "type": "string"
                 },
+                "reply_user_member_ship": {
+                    "description": "reply user membership",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/entity.Membership"
+                        }
+                    ]
+                },
                 "reply_user_status": {
                     "description": "reply user status",
                     "type": "string"
@@ -8341,6 +8360,14 @@ const docTemplate = `{
                 "user_id": {
                     "description": "user id",
                     "type": "string"
+                },
+                "user_member_ship": {
+                    "description": "user membership",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/entity.Membership"
+                        }
+                    ]
                 },
                 "user_status": {
                     "description": "user status",
@@ -8547,6 +8574,9 @@ const docTemplate = `{
                 "location": {
                     "description": "location",
                     "type": "string"
+                },
+                "member_ship": {
+                    "$ref": "#/definitions/entity.Membership"
                 },
                 "mobile": {
                     "description": "mobile",
@@ -9636,6 +9666,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "string"
+                },
+                "membership": {
+                    "$ref": "#/definitions/entity.Membership"
                 },
                 "rank": {
                     "type": "integer"
@@ -11117,6 +11150,9 @@ const docTemplate = `{
                 "location": {
                     "type": "string"
                 },
+                "membership": {
+                    "$ref": "#/definitions/entity.Membership"
+                },
                 "rank": {
                     "type": "integer"
                 },
@@ -11356,6 +11392,14 @@ const docTemplate = `{
                 "display_name": {
                     "description": "display name",
                     "type": "string"
+                },
+                "membership": {
+                    "description": "membership",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/entity.Membership"
+                        }
+                    ]
                 },
                 "rank": {
                     "description": "rank",

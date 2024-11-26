@@ -404,11 +404,12 @@ type QuestionPageResp struct {
 }
 
 type QuestionPageRespOperator struct {
-	ID          string `json:"id"`
-	Username    string `json:"username"`
-	Rank        int    `json:"rank"`
-	DisplayName string `json:"display_name"`
-	Status      string `json:"status"`
+	ID          string            `json:"id"`
+	Username    string            `json:"username"`
+	Rank        int               `json:"rank"`
+	DisplayName string            `json:"display_name"`
+	Status      string            `json:"status"`
+	Membership  entity.Membership `json:"membership"`
 }
 
 type AdminQuestionPageReq struct {

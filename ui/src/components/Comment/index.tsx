@@ -420,6 +420,7 @@ const Comment = ({ objectId, mode, commentId }) => {
               {currentReplyId === item.comment_id ? (
                 <Reply
                   userName={item.user_display_name}
+                  replyUserMemberShip={item.reply_user_member_ship}
                   mode={mode}
                   onSendReply={(value) =>
                     handleSendReply({ ...item, value, type: 'reply' })
@@ -436,6 +437,7 @@ const Comment = ({ objectId, mode, commentId }) => {
                   isVote={item.is_vote}
                   memberActions={item.member_actions}
                   userStatus={item.user_status}
+                  userMemberShip={item.user_member_ship}
                   onReply={() => {
                     handleReply(item.comment_id);
                   }}

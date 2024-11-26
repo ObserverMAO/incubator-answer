@@ -153,9 +153,10 @@ type GetOtherUserInfoByUsernameResp struct {
 	// website
 	Website string `json:"website"`
 	// location
-	Location  string `json:"location"`
-	Status    string `json:"status"`
-	StatusMsg string `json:"status_msg,omitempty"`
+	Location   string            `json:"location"`
+	Status     string            `json:"status"`
+	StatusMsg  string            `json:"status_msg,omitempty"`
+	MemberShip entity.Membership `json:"member_ship"`
 }
 
 func (r *GetOtherUserInfoByUsernameResp) ConvertFromUserEntity(userInfo *entity.User) {
@@ -348,15 +349,16 @@ type ActionRecordResp struct {
 }
 
 type UserBasicInfo struct {
-	ID          string `json:"id"`
-	Username    string `json:"username"`
-	Rank        int    `json:"rank"`
-	DisplayName string `json:"display_name"`
-	Avatar      string `json:"avatar"`
-	Website     string `json:"website"`
-	Location    string `json:"location"`
-	Language    string `json:"language"`
-	Status      string `json:"status"`
+	ID          string            `json:"id"`
+	Username    string            `json:"username"`
+	Rank        int               `json:"rank"`
+	DisplayName string            `json:"display_name"`
+	Avatar      string            `json:"avatar"`
+	Website     string            `json:"website"`
+	Location    string            `json:"location"`
+	Language    string            `json:"language"`
+	Status      string            `json:"status"`
+	Membership  entity.Membership `json:"membership"`
 }
 
 type GetOtherUserInfoByUsernameReq struct {
@@ -405,6 +407,8 @@ type UserRankingSimpleInfo struct {
 	DisplayName string `json:"display_name"`
 	// avatar
 	Avatar string `json:"avatar"`
+	// membership
+	Membership entity.Membership `json:"membership"`
 }
 
 // UserUnsubscribeNotificationReq user unsubscribe email notification request

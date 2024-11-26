@@ -171,6 +171,7 @@ const Index: FC<Props> = ({
           data.update_user_info?.username !== data.user_info?.username ? (
             <UserCard
               data={data?.update_user_info}
+              membership={data?.update_user_info?.membership}
               time={Number(data.update_time)}
               preFix={t('edit')}
               isLogged={isLogged}

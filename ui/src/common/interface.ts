@@ -170,6 +170,7 @@ export interface UserInfoRes extends UserInfoBase {
   language: string;
   e_mail?: string;
   have_password: boolean;
+  member_ship?: any;
   [prop: string]: any;
 }
 
