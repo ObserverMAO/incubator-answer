@@ -154,6 +154,7 @@ export interface UserInfoBase {
   location: string;
   ip_info?: string;
   status?: 'normal' | 'suspended' | 'deleted' | 'inactive';
+  membership?: any;
   /** roles */
   role_id?: RoleId;
 }
