@@ -22,10 +22,12 @@ package content
 import (
 	"context"
 	"encoding/json"
-	"github.com/apache/incubator-answer/internal/service/event_queue"
 	"time"
 
+	"github.com/apache/incubator-answer/internal/service/event_queue"
+
 	"github.com/apache/incubator-answer/internal/base/constant"
+	"github.com/apache/incubator-answer/internal/base/data"
 	"github.com/apache/incubator-answer/internal/base/reason"
 	"github.com/apache/incubator-answer/internal/entity"
 	"github.com/apache/incubator-answer/internal/schema"
@@ -69,6 +71,7 @@ type AnswerService struct {
 	activityQueueService             activity_queue.ActivityQueueService
 	reviewService                    *review.ReviewService
 	eventQueueService                event_queue.EventQueueService
+	data                             *data.Data
 }
 
 func NewAnswerService(
@@ -89,6 +92,7 @@ func NewAnswerService(
 	activityQueueService activity_queue.ActivityQueueService,
 	reviewService *review.ReviewService,
 	eventQueueService event_queue.EventQueueService,
+	data *data.Data,
 ) *AnswerService {
 	return &AnswerService{
 		answerRepo:                       answerRepo,
@@ -108,7 +112,28 @@ func NewAnswerService(
 		activityQueueService:             activityQueueService,
 		reviewService:                    reviewService,
 		eventQueueService:                eventQueueService,
+		data:                             data,
 	}
+}
+
+// get all external login info
+func (as *AnswerService) GetAllExternalLoginInfo(ctx context.Context) (externalLoginInfoMap map[string]*entity.MixinUserInfo) {
+	var externalLoginInfos []*entity.UserExternalLogin
+	err := as.data.DB.Table("user_external_login").Find(&externalLoginInfos)
+	if err != nil {
+		log.Debugf("get external login info failed: %v", err)
+	}
+	externalLoginInfoMap = make(map[string]*entity.MixinUserInfo, len(externalLoginInfos))
+	for _, info := range externalLoginInfos {
+		var mixinUserInfoResponse entity.MixinUserInfoResponse
+		err := json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
+		if err != nil {
+			log.Debugf("unmarshal external login info failed: %v", err)
+		}
+		externalLoginInfoMap[info.UserID] = &mixinUserInfoResponse.Data
+	}
+
+	return externalLoginInfoMap
 }
 
 // RemoveAnswer delete answer
@@ -614,13 +639,25 @@ func (as *AnswerService) SearchFormatInfo(ctx context.Context, answers []*entity
 		userIDs = append(userIDs, info.UserID, info.LastEditUserID)
 	}
 
+	externalLoginInfoMap := as.GetAllExternalLoginInfo(ctx)
+
 	userInfoMap, err := as.userCommon.BatchUserBasicInfoByID(ctx, userIDs)
 	if err != nil {
 		return list, err
 	}
 	for _, item := range list {
 		item.UserInfo = userInfoMap[item.UserID]
+		if item.UserInfo != nil {
+			if info, ok := externalLoginInfoMap[item.UserInfo.ID]; ok {
+				item.UserInfo.Membership = info.Membership
+			}
+		}
 		item.UpdateUserInfo = userInfoMap[item.UpdateUserID]
+		if item.UpdateUserInfo != nil {
+			if info, ok := externalLoginInfoMap[item.UpdateUserInfo.ID]; ok {
+				item.UpdateUserInfo.Membership = info.Membership
+			}
+		}
 	}
 	if len(req.UserID) == 0 {
 		return list, nil
