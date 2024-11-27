@@ -39,23 +39,23 @@ const Index: FC<IProps> = ({ membership, size, className, alt }) => {
   const roundedCls =
     className && className.indexOf('rounded') !== -1 ? '' : 'rounded';
 
-  let membershipUrl = '';
+  let planUrl = '';
   if (membership === 'advance') {
-    membershipUrl = Advance;
+    planUrl = Advance;
   } else if (membership === 'prosperity') {
-    membershipUrl = Prosperity;
+    planUrl = Prosperity;
   } else if (membership === 'elite') {
-    membershipUrl = Elite;
+    planUrl = Elite;
   } else {
-    membershipUrl = '';
+    planUrl = '';
   }
 
   return (
     <>
       {/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role,jsx-a11y/control-has-associated-label */}
-      {membershipUrl && (
+      {planUrl && (
         <img
-          src={membershipUrl}
+          src={planUrl}
           width={size}
           height={size}
           className={classNames(roundedCls, className)}

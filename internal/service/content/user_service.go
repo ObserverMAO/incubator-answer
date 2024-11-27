@@ -936,8 +936,8 @@ func (us *UserService) warpStatRankingResp(
 		log.Debugf("get all external login info failed: %v", err)
 	}
 	allExternalLoginInfoMap := make(map[string]*entity.MixinUserInfo, len(allExternalLoginInfo))
-	var mixinUserInfoResponse entity.MixinUserInfoResponse
 	for _, info := range allExternalLoginInfo {
+		var mixinUserInfoResponse entity.MixinUserInfoResponse
 		err := json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
 		if err != nil {
 			log.Debugf("unmarshal external login info failed: %v", err)
