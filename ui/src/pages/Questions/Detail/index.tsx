@@ -273,7 +273,6 @@ const Index = () => {
             })}
           </>
         )}
-
         {!isLoading && Math.ceil(answers.count / 999) > 1 && (
           <div className="d-flex justify-content-center answer-item pt-4">
             <Pagination
@@ -283,7 +282,6 @@ const Index = () => {
             />
           </div>
         )}
-
         {!isLoading &&
           Number(question?.status) !== 2 &&
           !question?.operation?.type && (

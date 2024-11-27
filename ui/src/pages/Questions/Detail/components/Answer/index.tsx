@@ -196,6 +196,7 @@ const Index: FC<Props> = ({
         <div style={{ minWidth: '196px' }}>
           <UserCard
             data={data?.user_info}
+            membership={data?.user_info?.membership}
             time={Number(data.create_time)}
             preFix={t('answered')}
             isLogged={isLogged}
