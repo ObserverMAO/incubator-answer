@@ -96,18 +96,26 @@ const Index: FC<Props> = ({
                 {data?.display_name}
               </Link>
               {membership && (
-                <MemberShip membership={membership.plan} size="14" />
+                <MemberShip
+                  membership={membership.plan}
+                  size="14"
+                  className="ms-1"
+                />
               )}
             </>
           ) : (
             <>
               <span className="me-1 text-break">{data?.display_name}</span>
               {membership && (
-                <MemberShip membership={membership.plan} size="14" />
+                <MemberShip
+                  membership={membership.plan}
+                  size="14"
+                  className="ms-1"
+                />
               )}
             </>
           )}
-          <span className="fw-bold" title="Reputation">
+          <span className="fw-bold ms-1" title="Reputation">
             {formatCount(data?.rank)}
           </span>
         </div>
