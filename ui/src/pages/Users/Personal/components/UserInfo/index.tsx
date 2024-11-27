@@ -79,14 +79,33 @@ const Index: FC<Props> = ({ data }) => {
       <div className="ms-0 ms-md-4 mt-4 mt-md-0">
         <div className="d-flex align-items-center mb-2">
           {data?.status !== 'deleted' ? (
-            <Link
-              to={`/users/${data.username}`}
-              className="link-dark h3 mb-0"
-              reloadDocument>
-              {data.display_name}
-            </Link>
+            <>
+              <Link
+                to={`/users/${data.username}`}
+                className="link-dark h3 mb-0"
+                reloadDocument>
+                {data.display_name}
+              </Link>
+
+              {data.member_ship?.plan && (
+                <MemberShip
+                  membership={data.member_ship?.plan}
+                  size="24"
+                  className="ms-2"
+                />
+              )}
+            </>
           ) : (
-            <span className="link-dark h3 mb-0">{data.display_name}</span>
+            <>
+              <span className="link-dark h3 mb-0">{data.display_name}</span>
+              {data.member_ship?.plan && (
+                <MemberShip
+                  membership={data.member_ship?.plan}
+                  size="24"
+                  className="ms-2"
+                />
+              )}
+            </>
           )}
           {data?.role_id === 2 && (
             <div className="ms-2">
@@ -98,16 +117,7 @@ const Index: FC<Props> = ({ data }) => {
             </div>
           )}
         </div>
-        <div className="text-secondary mb-4">
-          @{data.username}
-          {data.member_ship?.plan && (
-            <MemberShip
-              membership={data.member_ship?.plan}
-              size="16"
-              className="ms-1"
-            />
-          )}
-        </div>
+        <div className="text-secondary mb-4">@{data.username}</div>
 
         <div className="d-flex flex-wrap mb-3">
           <div className="me-3">

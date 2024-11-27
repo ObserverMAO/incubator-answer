@@ -133,8 +133,8 @@ func (cs *CommentService) GetAllExternalLoginInfo(ctx context.Context) (external
 		log.Debugf("get external login info failed: %v", err)
 	}
 	externalLoginInfoMap = make(map[string]*entity.MixinUserInfo, len(externalLoginInfos))
-	var mixinUserInfoResponse entity.MixinUserInfoResponse
 	for _, info := range externalLoginInfos {
+		var mixinUserInfoResponse entity.MixinUserInfoResponse
 		err := json.Unmarshal([]byte(info.MetaInfo), &mixinUserInfoResponse)
 		if err != nil {
 			log.Debugf("unmarshal external login info failed: %v", err)
