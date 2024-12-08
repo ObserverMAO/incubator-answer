@@ -127,7 +127,7 @@ func (us *UserExternalLoginService) ExternalLogin(
 		}
 		if exist && oldUserInfo.Status != entity.UserStatusDeleted {
 			oldUserInfo.Avatar = schema.CustomAvatar(externalUserInfo.Avatar).ToJsonString()
-			err = us.userRepo.UpdateUserProfile(ctx, oldUserInfo)
+			err = us.userRepo.UpdateInfo(ctx, oldUserInfo)
 			if err != nil {
 				log.Error("update user avatar failed: " + err.Error())
 			}
