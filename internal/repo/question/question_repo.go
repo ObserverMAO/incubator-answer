@@ -375,10 +375,10 @@ func (qr *questionRepo) GetQuestionPage(ctx context.Context, page, pageSize int,
 	case "newest":
 		session.OrderBy("question.pin desc,question.created_at DESC")
 	case "active":
-		if inDays == 0 {
-			session.And("question.created_at > ?", time.Now().AddDate(0, 0, -180))
-		}
-		session.And("question.post_update_time > ?", time.Now().AddDate(0, 0, -90))
+		// if inDays == 0 {
+		// 	session.And("question.created_at > ?", time.Now().AddDate(0, 0, -180))
+		// }
+		// session.And("question.post_update_time > ?", time.Now().AddDate(0, 0, -90))
 		session.OrderBy("question.pin desc,question.post_update_time DESC, question.updated_at DESC")
 	case "hot":
 		session.OrderBy("question.pin desc,question.hot_score DESC")

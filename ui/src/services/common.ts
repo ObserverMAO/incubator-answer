@@ -64,7 +64,7 @@ export const useQueryRevisions = (object_id: string | undefined) => {
 
 export const useQueryComments = (params) => {
   if (params.page === 0) {
-    params.query_cond = 'vote';
+    params.query_cond = 'created_at';
     params.page = 1;
   } else {
     // only first page need commentId
