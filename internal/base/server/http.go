@@ -63,7 +63,7 @@ func NewHTTPServer(debug bool,
 	rootGroup := r.Group("")
 	swaggerRouter.Register(rootGroup)
 	static := r.Group("")
-	static.Use(avatarMiddleware.AvatarThumb(), authUserMiddleware.VisitAuth())
+	static.Use(authUserMiddleware.VisitAuth(), avatarMiddleware.AvatarThumb())
 	staticRouter.RegisterStaticRouter(static)
 
 	// The route must be available without logging in

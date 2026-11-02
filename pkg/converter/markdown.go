@@ -53,16 +53,51 @@ func Markdown2HTML(source string) string {
 		log.Error(err)
 		return source
 	}
-	html := buf.String()
-	// filter := bluemonday.UGCPolicy()
-	// filter.AllowStyling()
-	// filter.RequireNoFollowOnLinks(false)
-	// filter.RequireParseableURLs(false)
-	// filter.RequireNoFollowOnFullyQualifiedLinks(false)
-	// filter.AllowElements("kbd")
-	// filter.AllowAttrs("title").Matching(regexp.MustCompile(`^[\p{L}\p{N}\s\-_',\[\]!\./\\\(\)]*$|^@embed?$`)).Globally()
-	// html = filter.Sanitize(html)
-	return html
+	// The enclave extension writes raw HTML with unescaped user input
+	// (YouTube IDs, image params, error messages), so its output must never be
+	// trusted: always run the final document through the sanitizer.
+	return outputPolicy.Sanitize(buf.String())
+}
+
+var (
+	// Embeds we render on purpose. Anything else in an iframe src is dropped.
+	embedIframeSrc = regexp.MustCompile(
+		`^(?:https:)?//(?:www\.youtube\.com/embed/[A-Za-z0-9_-]{1,64}|player\.bilibili\.com/player\.html\?[A-Za-z0-9=&_-]{1,256})$`)
+	iframeAllow  = regexp.MustCompile(`^[a-z\-; ]*$`)
+	iframeLength = regexp.MustCompile(`^[0-9]{1,4}%?$`)
+	iframeFlag   = regexp.MustCompile(`^(?:true|false|0|1|no|yes|)$`)
+	videoSrc     = regexp.MustCompile(`^https://[^\s"'<>]+$`)
+
+	outputPolicy = newOutputPolicy()
+)
+
+func newOutputPolicy() *bluemonday.Policy {
+	p := bluemonday.UGCPolicy()
+	p.AllowStyling()
+	p.RequireNoFollowOnLinks(false)
+	p.RequireParseableURLs(false)
+	p.RequireNoFollowOnFullyQualifiedLinks(false)
+	p.AllowElements("kbd")
+	p.AllowAttrs("title").Matching(regexp.MustCompile(`^[\p{L}\p{N}\s\-_',\[\]!\./\\\(\)]*$|^@embed?$`)).Globally()
+	p.AllowAttrs("start").OnElements("ol")
+
+	// GFM table alignment
+	p.AllowStyles("text-align").OnElements("th", "td")
+	// enclave image wrapper sizing (values are validated by bluemonday's CSS handlers)
+	p.AllowStyles("width", "height", "margin", "display").OnElements("span", "img")
+
+	// YouTube / Bilibili embeds
+	p.AllowAttrs("src").Matching(embedIframeSrc).OnElements("iframe")
+	p.AllowAttrs("width", "height").Matching(iframeLength).OnElements("iframe")
+	p.AllowAttrs("allow").Matching(iframeAllow).OnElements("iframe")
+	p.AllowAttrs("allowfullscreen", "frameborder", "border", "framespacing", "scrolling").
+		Matching(iframeFlag).OnElements("iframe")
+
+	// uploaded videos
+	p.AllowAttrs("src").Matching(videoSrc).OnElements("video")
+	p.AllowAttrs("width", "height").Matching(iframeLength).OnElements("video")
+	p.AllowAttrs("controls").Matching(iframeFlag).OnElements("video")
+	return p
 }
 
 // Markdown2BasicHTML convert markdown to html ,Only basic syntax can be used

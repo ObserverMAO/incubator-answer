@@ -20,6 +20,7 @@
 package checker
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	_ "image/gif" // use init to support decode jpeg,jpg,png,gif
@@ -51,8 +52,9 @@ func IsSupportedImageFile(localFilePath string) bool {
 			return false
 		}
 	case "ico":
-		// TODO: There is currently no good Golang library to parse whether the image is in ico format.
-		return true
+		// No decoder for ico in the std lib; at least require the ICONDIR header
+		// (reserved=0, type=1) so arbitrary text/HTML cannot be stored as .ico.
+		return hasPrefix(localFilePath, []byte{0x00, 0x00, 0x01, 0x00})
 	case "webp":
 		if !decodeAndCheckImageFile(localFilePath, webpImageConfigCheck) {
 			return false
@@ -124,4 +126,17 @@ func webpImageCheck(file io.Reader) error {
 
 func imageSizeTooLarge(config image.Config) bool {
 	return config.Width*config.Height > maxImageSize
+}
+
+func hasPrefix(localFilePath string, magic []byte) bool {
+	file, err := os.Open(localFilePath)
+	if err != nil {
+		return false
+	}
+	defer func() { _ = file.Close() }()
+	head := make([]byte, len(magic))
+	if _, err := io.ReadFull(file, head); err != nil {
+		return false
+	}
+	return bytes.Equal(head, magic)
 }

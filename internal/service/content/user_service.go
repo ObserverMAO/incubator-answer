@@ -239,8 +239,9 @@ func (us *UserService) RetrievePassWord(ctx context.Context, req *schema.UserRet
 
 	// send email
 	data := &schema.EmailCodeContent{
-		Email:  req.Email,
-		UserID: userInfo.ID,
+		SourceType: schema.PasswordResetSourceType,
+		Email:      req.Email,
+		UserID:     userInfo.ID,
 	}
 	code := uuid.NewString()
 	verifyEmailURL := fmt.Sprintf("%s/users/password-reset?code=%s", us.getSiteUrl(ctx), code)
@@ -256,7 +257,7 @@ func (us *UserService) RetrievePassWord(ctx context.Context, req *schema.UserRet
 func (us *UserService) UpdatePasswordWhenForgot(ctx context.Context, req *schema.UserRePassWordRequest) (err error) {
 	data := &schema.EmailCodeContent{}
 	err = data.FromJSONString(req.Content)
-	if err != nil {
+	if err != nil || !data.IsSourceType(schema.PasswordResetSourceType) {
 		return errors.BadRequest(reason.EmailVerifyURLExpired)
 	}
 
@@ -466,8 +467,9 @@ func (us *UserService) UserRegisterByEmail(ctx context.Context, registerUserInfo
 
 	// send email
 	data := &schema.EmailCodeContent{
-		Email:  registerUserInfo.Email,
-		UserID: userInfo.ID,
+		SourceType: schema.AccountActivationSourceType,
+		Email:      registerUserInfo.Email,
+		UserID:     userInfo.ID,
 	}
 	code := uuid.NewString()
 	verifyEmailURL := fmt.Sprintf("%s/users/account-activation?code=%s", us.getSiteUrl(ctx), code)
@@ -516,8 +518,9 @@ func (us *UserService) UserVerifyEmailSend(ctx context.Context, userID string) e
 	}
 
 	data := &schema.EmailCodeContent{
-		Email:  userInfo.EMail,
-		UserID: userInfo.ID,
+		SourceType: schema.AccountActivationSourceType,
+		Email:      userInfo.EMail,
+		UserID:     userInfo.ID,
 	}
 	code := uuid.NewString()
 	verifyEmailURL := fmt.Sprintf("%s/users/account-activation?code=%s", us.getSiteUrl(ctx), code)
@@ -532,7 +535,7 @@ func (us *UserService) UserVerifyEmailSend(ctx context.Context, userID string) e
 func (us *UserService) UserVerifyEmail(ctx context.Context, req *schema.UserVerifyEmailReq) (resp *schema.UserLoginResp, err error) {
 	data := &schema.EmailCodeContent{}
 	err = data.FromJSONString(req.Content)
-	if err != nil {
+	if err != nil || !data.IsSourceType(schema.AccountActivationSourceType, schema.BindingSourceType) {
 		return nil, errors.BadRequest(reason.EmailVerifyURLExpired)
 	}
 
@@ -631,8 +634,9 @@ func (us *UserService) UserChangeEmailSendCode(ctx context.Context, req *schema.
 	}
 
 	data := &schema.EmailCodeContent{
-		Email:  req.Email,
-		UserID: req.UserID,
+		SourceType: schema.ConfirmNewEmailSourceType,
+		Email:      req.Email,
+		UserID:     req.UserID,
 	}
 	code := uuid.NewString()
 	var title, body string
@@ -655,7 +659,7 @@ func (us *UserService) UserChangeEmailSendCode(ctx context.Context, req *schema.
 func (us *UserService) UserChangeEmailVerify(ctx context.Context, content string) (resp *schema.UserLoginResp, err error) {
 	data := &schema.EmailCodeContent{}
 	err = data.FromJSONString(content)
-	if err != nil {
+	if err != nil || !data.IsSourceType(schema.ConfirmNewEmailSourceType) {
 		return nil, errors.BadRequest(reason.EmailVerifyURLExpired)
 	}
 
@@ -791,7 +795,7 @@ func (us *UserService) UserUnsubscribeNotification(
 	ctx context.Context, req *schema.UserUnsubscribeNotificationReq) (err error) {
 	data := &schema.EmailCodeContent{}
 	err = data.FromJSONString(req.Content)
-	if err != nil || len(data.UserID) == 0 {
+	if err != nil || len(data.UserID) == 0 || !data.IsSourceType(schema.UnsubscribeSourceType) {
 		return errors.BadRequest(reason.EmailVerifyURLExpired)
 	}
 

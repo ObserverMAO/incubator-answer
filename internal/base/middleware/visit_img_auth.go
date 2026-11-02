@@ -37,6 +37,7 @@ func (am *AuthUserMiddleware) VisitAuth() gin.HandlerFunc {
 
 		siteLogin, err := am.siteInfoCommonService.GetSiteLogin(ctx)
 		if err != nil {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 		if !siteLogin.LoginRequired {

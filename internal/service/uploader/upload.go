@@ -262,12 +262,14 @@ func (us *uploaderService) uploadFile(ctx *gin.Context, file *multipart.FileHead
 	if err := ctx.SaveUploadedFile(file, filePath); err != nil {
 		return "", errors.InternalServer(reason.UnknownError).WithError(err).WithStack()
 	}
-
-	src, err := file.Open()
-	if err != nil {
-		return "", errors.InternalServer(reason.UnknownError).WithError(err).WithStack()
-	}
-	defer src.Close()
+	saved := false
+	defer func() {
+		if !saved {
+			if removeErr := os.Remove(filePath); removeErr != nil && !os.IsNotExist(removeErr) {
+				log.Errorf("remove rejected upload failed: %v", removeErr)
+			}
+		}
+	}()
 
 	if !checker.IsSupportedImageFile(filePath) {
 		return "", errors.BadRequest(reason.UploadFileUnsupportedFileFormat)
@@ -278,6 +280,7 @@ func (us *uploaderService) uploadFile(ctx *gin.Context, file *multipart.FileHead
 	}
 
 	url = fmt.Sprintf("%s/uploads/%s", siteGeneral.SiteUrl, fileSubPath)
+	saved = true
 	return url, nil
 }
 

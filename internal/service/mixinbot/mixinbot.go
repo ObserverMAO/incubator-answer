@@ -8,7 +8,7 @@ import (
 
 	"github.com/fox-one/mixin-sdk-go/v2"
 	"github.com/fox-one/mixin-sdk-go/v2/mixinnet"
-	"google.golang.org/appengine/log"
+	"github.com/segmentfault/pacman/log"
 )
 
 type MixinBotService struct {
@@ -64,12 +64,12 @@ func (m *MixinBotService) SendMessage(ctx context.Context, message *mixin.Messag
 			// try create conversation
 			_, err = m.Client.CreateContactConversation(ctx, message.RecipientID)
 			if err != nil {
-				log.Errorf(ctx, "create contact conversation failed: %v, data: %v, retry: %d", err, message, retry)
+				log.Errorf("create contact conversation failed: %v, data: %v, retry: %d", err, message, retry)
 				return err
 			}
 			err = m.Client.SendMessage(ctx, message)
 			if err != nil {
-				log.Errorf(ctx, "send mixin notification failed: %v, data: %v, retry: %d", err, message, retry)
+				log.Errorf("send mixin notification failed: %v, data: %v, retry: %d", err, message, retry)
 				return err
 			}
 		}

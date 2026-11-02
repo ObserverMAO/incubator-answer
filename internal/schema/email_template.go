@@ -28,7 +28,7 @@ import (
 const (
 	AccountActivationSourceType EmailSourceType = "account-activation"
 	PasswordResetSourceType     EmailSourceType = "password-reset"
-	ConfirmNewEmailSourceType   EmailSourceType = "password-reset"
+	ConfirmNewEmailSourceType   EmailSourceType = "confirm-new-email"
 	UnsubscribeSourceType       EmailSourceType = "unsubscribe"
 	BindingSourceType           EmailSourceType = "binding"
 )
@@ -54,6 +54,20 @@ func (r *EmailCodeContent) ToJSONString() string {
 
 func (r *EmailCodeContent) FromJSONString(data string) error {
 	return json.Unmarshal([]byte(data), &r)
+}
+
+// IsSourceType reports whether the code was issued for one of the given purposes.
+// Every code consumer must check this: without it, a code issued for one purpose
+// (e.g. an unsubscribe link, which carries the recipient's e-mail) can be replayed
+// against another endpoint (account activation / password reset) to log in as,
+// or take over, the recipient.
+func (r *EmailCodeContent) IsSourceType(types ...EmailSourceType) bool {
+	for _, t := range types {
+		if r.SourceType == t {
+			return true
+		}
+	}
+	return false
 }
 
 type RegisterTemplateData struct {

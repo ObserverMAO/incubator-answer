@@ -21,8 +21,9 @@ package token
 
 import "github.com/google/uuid"
 
-// GenerateToken generate token
+// GenerateToken generates an unguessable token (UUIDv4, 122 random bits).
+// Do not use uuid.NewUUID (v1) here: v1 is timestamp + fixed node/clock-seq,
+// so access tokens, admin tokens and email codes become predictable.
 func GenerateToken() string {
-	uid, _ := uuid.NewUUID()
-	return uid.String()
+	return uuid.NewString()
 }

@@ -27,6 +27,7 @@ import (
 
 func HeadersByRequestURI() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		c.Header("X-Content-Type-Options", "nosniff")
 		if strings.HasPrefix(c.Request.RequestURI, "/static/") {
 			c.Header("cache-control", "public, max-age=31536000")
 		}
