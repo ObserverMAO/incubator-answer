@@ -33,6 +33,7 @@ export const uploadImage = (params: {
   form.append('file', params.file);
   return request.post('/answer/api/v1/file', form, {
     onUploadProgress: params.onUploadProgress,
+    timeout: 660000, // 11min
   });
 };
 

@@ -69,8 +69,8 @@ type MixinUserInfo struct {
 	AcceptConversationSource      string      `json:"accept_conversation_source"`
 	AcceptSearchSource            string      `json:"accept_search_source"`
 	FiatCurrency                  string      `json:"fiat_currency"`
-	TransferNotificationThreshold int64       `json:"transfer_notification_threshold"`
-	TransferConfirmationThreshold int64       `json:"transfer_confirmation_threshold"`
+	// TransferNotificationThreshold int64       `json:"transfer_notification_threshold"`
+	// TransferConfirmationThreshold int64       `json:"transfer_confirmation_threshold"`
 	PinTokenBase64                string      `json:"pin_token_base64"`
 	PinToken                      string      `json:"pin_token"`
 	SaltBase64                    string      `json:"salt_base64"`

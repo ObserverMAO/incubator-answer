@@ -86,6 +86,36 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
     return null;
   }
 
+  function jsonToUrlSafeBase64(jsonObj: any): string {
+    // 将JSON对象转换为JSON字符串
+    const jsonStr = JSON.stringify(jsonObj);
+    // 将JSON字符串转换为字节数组
+    const byteArray = new TextEncoder().encode(jsonStr);
+    // 将字节数组转换为Base64字符串
+    const base64Str = btoa(String.fromCharCode(...Array.from(byteArray)));
+    // 转换为URL安全的Base64字符串
+    return base64Str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  }
+
+  const handleReward = () => {
+    const donateItem = {
+      title: data.title,
+      // 限制 description 最大长度为 64
+      description:
+        data.content?.length > 64
+          ? `${data.content.slice(0, 61)}...`
+          : data.content,
+      imgUrl: '',
+      link: window.location.href,
+      identityNumber: data.user_info?.username,
+    };
+
+    window.open(
+      `https://donate.domefi.one/project/${jsonToUrlSafeBase64(donateItem)}`,
+      '_blank',
+    );
+  };
+
   return (
     <div>
       <h1 className="h3 mb-3 text-wrap text-break">
@@ -106,7 +136,6 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
             : ''}
         </Link>
       </h1>
-
       <div className="d-flex flex-wrap align-items-center small mb-3 text-secondary">
         <FormatTime
           time={data.create_time}
@@ -148,7 +177,6 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
           dangerouslySetInnerHTML={{ __html: data?.html }}
         />
       </ImgViewer>
-
       <Actions
         className="mt-4"
         source="question"
@@ -162,6 +190,16 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
           username: data.user_info?.username,
         }}
       />
+
+      <div className="d-flex flex-wrap mt-4 mb-3 mx-0 justify-content-center">
+        <Button
+          // className="me-2 active rounded-pill px-4 py-2"
+          // variant="outline-primary"
+          size="lg"
+          onClick={() => handleReward()}>
+          Reward
+        </Button>
+      </div>
 
       <div className="d-block d-md-flex flex-wrap mt-4 mb-3">
         <div className="mb-3 mb-md-0 me-4 flex-grow-1">
