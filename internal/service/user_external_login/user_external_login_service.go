@@ -104,6 +104,13 @@ func (us *UserExternalLoginService) ExternalLogin(
 			ErrMsg:   translator.Tr(handler.GetLangByCtx(ctx), reason.UserExternalLoginMissingUserID),
 		}, nil
 	}
+	if isMixinBotAccount(externalUserInfo.MetaInfo) {
+		log.Warnf("reject external login from mixin bot account, external_id=%s", externalUserInfo.ExternalID)
+		return &schema.UserExternalLoginResp{
+			ErrTitle: translator.Tr(handler.GetLangByCtx(ctx), reason.UserAccessDenied),
+			ErrMsg:   translator.Tr(handler.GetLangByCtx(ctx), reason.UserAccessDenied),
+		}, nil
+	}
 
 	oldExternalLoginUserInfo, exist, err := us.userExternalLoginRepo.GetByExternalID(ctx,
 		externalUserInfo.Provider, externalUserInfo.ExternalID)
@@ -422,4 +429,23 @@ func (us *UserExternalLoginService) CheckUserStatusInUserCenter(ctx context.Cont
 		return false, thisUcUserInfo.ExternalID, nil
 	}
 	return true, thisUcUserInfo.ExternalID, nil
+}
+
+// isMixinBotAccount reports whether the Mixin /me payload stored in MetaInfo
+// belongs to a bot/app account. Mixin bots are users whose identity_number is
+// "0"; anyone holding a bot keystore can complete the OAuth flow as that bot and
+// mint an unlimited number of throwaway forum accounts, so they are refused.
+func isMixinBotAccount(metaInfo string) bool {
+	if metaInfo == "" {
+		return false
+	}
+	var me struct {
+		Data struct {
+			IdentityNumber string `json:"identity_number"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal([]byte(metaInfo), &me); err != nil {
+		return false
+	}
+	return me.Data.IdentityNumber == "0"
 }
