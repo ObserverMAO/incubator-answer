@@ -432,9 +432,10 @@ func (us *UserExternalLoginService) CheckUserStatusInUserCenter(ctx context.Cont
 }
 
 // isMixinBotAccount reports whether the Mixin /me payload stored in MetaInfo
-// belongs to a bot/app account. Mixin bots are users whose identity_number is
-// "0"; anyone holding a bot keystore can complete the OAuth flow as that bot and
-// mint an unlimited number of throwaway forum accounts, so they are refused.
+// belongs to a "network user": an account created by a bot/app through the
+// Mixin API (POST /users). Such users have identity_number "0" and carry the
+// creating app in app_id. Anyone with their own bot can create them without
+// limit and complete the OAuth flow with each one, so they are refused.
 func isMixinBotAccount(metaInfo string) bool {
 	if metaInfo == "" {
 		return false

@@ -22,7 +22,7 @@ import "testing"
 
 func TestIsMixinBotAccount(t *testing.T) {
 	cases := map[string]bool{
-		// real payloads from production (trimmed)
+		// real payloads from production (trimmed); the first is an app-created network user
 		`{"data":{"type":"user","user_id":"8a7fee01-d454-36d0-8291-738acdf05237","identity_number":"0","full_name":"qac2e2d7979b","app_id":"4e96fa4e-9331-4787-958b-84bab43b1df6"}}`: true,
 		`{"data":{"type":"user","user_id":"b847a455-aa41-4f7d-8038-0aefbe40dcaa","identity_number":"31911","full_name":"crossle"}}`:                                                  false,
 		``:            false,
